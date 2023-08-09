@@ -1,0 +1,93 @@
+package com.fssa.leavemanagement.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.fssa.leavemanagement.model.EmployeeRoleDetails;
+import com.fssa.leavemanagement.util.ConnectionUtil;
+
+/**
+ * The EmployeeRoleDetailsDao class provides methods to interact with the
+ * database for managing employee role details. This class allows adding,
+ * updating, and retrieving employee role details from the database. The
+ * database table used for storing employee role details is
+ * "employee_role_details."
+ * 
+ * @author PranawMurugesan
+ *
+ */
+public class EmployeeRoleDetailsDao {
+	/**
+	 * Adds an EmployeeRoleDetails object to the database.
+	 * 
+	 * @param erd The EmployeeRoleDetails object to be added to the database.
+	 * @return true if the addition is successful, false otherwise.
+	 * @throws SQLException If a database access error occurs.
+	 */
+	public static boolean addEmployeeRoleDetails(EmployeeRoleDetails erd) throws SQLException {
+		String query = "INSERT INTO employee_role_details (employee_id,role_id,"
+				+ "reporting_manager_id) VALUES (?,?,?);";
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			try (PreparedStatement pst = connection.prepareStatement(query)) {
+				pst.setInt(1, erd.getEmployeeId());
+				pst.setInt(2, erd.getRoleId());
+				pst.setInt(3, erd.getReportingManagerId());
+
+				int rows = pst.executeUpdate();
+				return (rows > 0) ? true : false;
+			}
+		}
+
+	}
+
+	/**
+	 * Updates an existing EmployeeRoleDetails object in the database.
+	 * 
+	 * @param erd The EmployeeRoleDetails object with updated values.
+	 * @return true if the update is successful, false otherwise.
+	 * @throws SQLException If a database access error occurs.
+	 */
+	public static boolean updateEmployeeRoleDetails(EmployeeRoleDetails erd) throws SQLException {
+		String query = "UPDATE employee_role_details SET employee_id = ? ,"
+				+ " role_id = ? , reporting_manager_id = ? WHERE employee_id = ?";
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			try (PreparedStatement pst = connection.prepareStatement(query)) {
+				pst.setInt(1, erd.getEmployeeId());
+				pst.setInt(2, erd.getRoleId());
+				pst.setInt(3, erd.getReportingManagerId());
+				pst.setInt(4, erd.getEmployeeId());
+
+				int rows = pst.executeUpdate();
+				return (rows > 0) ? true : false;
+			}
+		}
+	}
+
+	/**
+	 * Retrieves all employee role details from the database and prints them to the
+	 * console.
+	 * 
+	 * @return true if the retrieval is successful, false otherwise.
+	 * @throws SQLException If a database access error occurs.
+	 */
+	public static boolean getAllEmployeeRoleDetails() throws SQLException {
+		String query = "SELECT * FROM employee_role_details";
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			try (Statement st = connection.createStatement()) {
+				try (ResultSet rs = st.executeQuery(query)) {
+					while (rs.next()) {
+						System.out.println("id : " + rs.getInt("id"));
+						System.out.println("id : " + rs.getInt("employee_id"));
+						System.out.println("id : " + rs.getInt("role_id"));
+						System.out.println("id : " + rs.getInt("reporting_manager_id"));
+					}
+					return true;
+				}
+
+			}
+		}
+	}
+}

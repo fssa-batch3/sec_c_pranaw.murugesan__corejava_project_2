@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.fssa.leavemanagement.dao.TestEmployeeDao
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.467 s <<< FAILURE! - in com.fssa.leavemanagement.dao.TestEmployeeDao
+initializationError(com.fssa.leavemanagement.dao.TestEmployeeDao)  Time elapsed: 0.007 s  <<< ERROR!
+java.lang.RuntimeException: java.lang.reflect.InaccessibleObjectException: Unable to make protected native java.lang.Object java.lang.Object.clone() throws java.lang.CloneNotSupportedException accessible: module java.base does not "opens java.lang" to unnamed module @793be5ca
+Caused by: java.lang.reflect.InaccessibleObjectException: Unable to make protected native java.lang.Object java.lang.Object.clone() throws java.lang.CloneNotSupportedException accessible: module java.base does not "opens java.lang" to unnamed module @793be5ca
+

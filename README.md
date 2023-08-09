@@ -1,1 +1,0 @@
-# demoapp-corejava-template
