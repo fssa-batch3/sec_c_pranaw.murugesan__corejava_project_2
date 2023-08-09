@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidRoleException;
 import com.fssa.leavemanagement.model.Role;
 import com.fssa.leavemanagement.util.ConnectionUtil;
@@ -22,6 +23,9 @@ import com.fssa.leavemanagement.validator.RoleValidator;
  * related to role operations.
  */
 public class RoleDao {
+	private RoleDao() {
+//		private constructor
+	}
 
 	static Logger logger = new Logger();
 
@@ -33,8 +37,9 @@ public class RoleDao {
 	 * @throws InvalidRoleException If the role object is invalid according to
 	 *                              validation rules.
 	 * @throws SQLException         If a database access error occurs.
+	 * @throws DAOException
 	 */
-	public static boolean addRole(Role role) throws InvalidRoleException, SQLException {
+	public static boolean addRole(Role role) throws InvalidRoleException, SQLException, DAOException {
 		try {
 			RoleValidator.validate(role);
 		} catch (InvalidRoleException e) {
@@ -49,7 +54,7 @@ public class RoleDao {
 
 				int rows = pst.executeUpdate();
 
-				return (rows > 0) ? true : false;
+				return (rows > 0);
 			}
 		}
 	}
@@ -60,8 +65,9 @@ public class RoleDao {
 	 * @param name The name of the role to search for.
 	 * @return The ID of the role if found, otherwise 0.
 	 * @throws SQLException If a database access error occurs.
+	 * @throws DAOException 
 	 */
-	public static int getRoleIdByName(String name) throws SQLException {
+	public static int getRoleIdByName(String name) throws SQLException, DAOException {
 		int id = 0;
 		String query = "SELECT id FROM role WHERE name = ?";
 		try (Connection connection = ConnectionUtil.getConnection()) {
@@ -85,8 +91,9 @@ public class RoleDao {
 	 * @throws InvalidRoleException If the role object is invalid according to
 	 *                              validation rules.
 	 * @throws SQLException         If a database access error occurs.
+	 * @throws DAOException 
 	 */
-	public static boolean deleteRole(Role role) throws InvalidRoleException, SQLException {
+	public static boolean deleteRole(Role role) throws InvalidRoleException, SQLException, DAOException {
 
 		int id = RoleDao.getRoleIdByName(role.getName());
 
@@ -98,7 +105,7 @@ public class RoleDao {
 
 				int rows = pst.executeUpdate();
 
-				return (rows > 0) ? true : false;
+				return (rows > 0);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -112,8 +119,9 @@ public class RoleDao {
 	 * @return true if the retrieval is successful, false otherwise.
 	 * @throws InvalidRoleException If an error occurs during the retrieval process.
 	 * @throws SQLException         If a database access error occurs.
+	 * @throws DAOException
 	 */
-	public static boolean readRole() throws InvalidRoleException, SQLException {
+	public static boolean readRole() throws InvalidRoleException, SQLException, DAOException {
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			String query = "SELECT * FROM role";
 			try (Statement statement = connection.createStatement()) {
@@ -144,8 +152,9 @@ public class RoleDao {
 	 * @return true if the role is found, false otherwise.
 	 * @throws InvalidRoleException If the role with the given name cannot be found.
 	 * @throws SQLException         If a database access error occurs.
+	 * @throws DAOException
 	 */
-	public static boolean findRoleByName(String name) throws InvalidRoleException, SQLException {
+	public static boolean findRoleByName(String name) throws InvalidRoleException, SQLException, DAOException {
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			String query = "SELECT * FROM role WHERE name = ?";
 			try (PreparedStatement pst = connection.prepareStatement(query)) {

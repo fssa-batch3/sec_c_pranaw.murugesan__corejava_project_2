@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * the default constructor, parameterized constructor, and getters/setters of
  * the Employee class.
  */
-public class TestEmployee {
+class TestEmployee {
 
 	@Test
 	void testDefaultConstructor() {

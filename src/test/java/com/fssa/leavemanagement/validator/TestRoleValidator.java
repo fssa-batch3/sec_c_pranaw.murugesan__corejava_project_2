@@ -16,7 +16,7 @@ import com.fssa.leavemanagement.model.Role;
  * @author PranawMurugesan
  *
  */
-public class TestRoleValidator {
+class TestRoleValidator {
 	@Test
 	void testValidate() {
 		Role role = new Role(1, "Manager");

@@ -6,22 +6,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.fssa.leavemanagement.exceptions.DAOException;
+
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class ConnectionUtil {
-
+	private ConnectionUtil() {
+//	private constructor
+	}
 
 	/**
 	 * Get a connection to the database.
 	 * 
 	 * @return The database connection.
+	 * @throws DAOException 
 	 * @throws RuntimeException if unable to connect to the database.
 	 */
-	public static Connection getConnection() {
+	public static Connection getConnection() throws DAOException {
 		Connection con = null;
 
-		String url, userName, passWord;
-		
+		String url;
+		String userName;
+		String passWord;
 
 		if (System.getenv("CI") != null) {
 			url = System.getenv("DATABASE_HOST");
@@ -35,12 +41,12 @@ public class ConnectionUtil {
 		}
 
 		try {
-	            Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection(url, userName, passWord);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Unable to connect to the database");
+			throw new DAOException("Unable to connect to the database");
 		}
 		return con;
 	}

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.fssa.leavemanagement.errors.RoleErrors;
+import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidRoleException;
 import com.fssa.leavemanagement.model.Role;
 
@@ -18,15 +19,15 @@ import com.fssa.leavemanagement.model.Role;
  * @author PranawMurugesan
  *
  */
-public class TestRoleService {
+class TestRoleService {
 	@Test
-	void testAddRole() throws InvalidRoleException, SQLException {
+	void testAddRole() throws InvalidRoleException, SQLException, DAOException {
 		Role role = new Role(1, "Junior Designer");
 		Assertions.assertTrue(RoleService.addRole(role));
 	}
 
 	@Test
-	void testInvalidAddRole() {
+	void testInvalidAddRole() throws DAOException {
 		Role role = new Role();
 
 		try {
@@ -38,13 +39,13 @@ public class TestRoleService {
 	}
 
 	@Test
-	void testDeleteRole() throws InvalidRoleException, SQLException {
+	void testDeleteRole() throws InvalidRoleException, SQLException, DAOException {
 		Role role = new Role(1, "Junior Designer");
 		Assertions.assertTrue(RoleService.deleteRole(role));
 	}
 
 	@Test
-	void testInvalidDeleteRole() {
+	void testInvalidDeleteRole() throws DAOException {
 		Role role = new Role(1, "abc");
 		try {
 			Assertions.assertTrue(RoleService.deleteRole(role));
@@ -54,12 +55,12 @@ public class TestRoleService {
 	}
 
 	@Test
-	void testReadRole() throws InvalidRoleException, SQLException {
+	void testReadRole() throws InvalidRoleException, SQLException, DAOException {
 		Assertions.assertTrue(RoleService.readRole());
 	}
 
 	@Test
-	void testFindRoleByName() throws InvalidRoleException, SQLException {
+	void testFindRoleByName() throws InvalidRoleException, SQLException, DAOException {
 		Role role = new Role(1, "CEO");
 		Assertions.assertTrue(RoleService.findRoleByName(role.getName()));
 	}

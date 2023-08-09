@@ -3,11 +3,15 @@ package com.fssa.leavemanagement.service;
 import java.sql.SQLException;
 
 import com.fssa.leavemanagement.dao.RoleDao;
+import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidRoleException;
 import com.fssa.leavemanagement.model.Role;
 import com.fssa.leavemanagement.validator.RoleValidator;
 
 public class RoleService {
+	private RoleService() {
+//		private constructor
+	}
 
 	/**
 	 * Add a role to the database.
@@ -16,8 +20,9 @@ public class RoleService {
 	 * @return true if the role is added successfully, false otherwise.
 	 * @throws InvalidRoleException if the role data is invalid.
 	 * @throws SQLException         if a general SQL exception occurs.
+	 * @throws DAOException
 	 */
-	public static boolean addRole(Role role) throws InvalidRoleException, SQLException {
+	public static boolean addRole(Role role) throws InvalidRoleException, SQLException, DAOException {
 		if (RoleValidator.validate(role)) {
 			RoleDao.addRole(role);
 		}
@@ -32,8 +37,9 @@ public class RoleService {
 	 * @throws InvalidRoleException if an invalid role is encountered during the
 	 *                              process.
 	 * @throws SQLException         if a general SQL exception occurs.
+	 * @throws DAOException
 	 */
-	public static boolean readRole() throws InvalidRoleException, SQLException {
+	public static boolean readRole() throws InvalidRoleException, SQLException, DAOException {
 		RoleDao.readRole();
 		return true;
 	}
@@ -45,8 +51,9 @@ public class RoleService {
 	 * @return true if the role is deleted successfully, false otherwise.
 	 * @throws InvalidRoleException if the role data is invalid.
 	 * @throws SQLException         if a general SQL exception occurs.
+	 * @throws DAOException
 	 */
-	public static boolean deleteRole(Role role) throws InvalidRoleException, SQLException {
+	public static boolean deleteRole(Role role) throws InvalidRoleException, SQLException, DAOException {
 		if (RoleValidator.validate(role)) {
 			RoleDao.deleteRole(role);
 		}
@@ -61,8 +68,9 @@ public class RoleService {
 	 *         false otherwise.
 	 * @throws InvalidRoleException if the role name is invalid.
 	 * @throws SQLException         if a general SQL exception occurs.
+	 * @throws DAOException
 	 */
-	public static boolean findRoleByName(String name) throws InvalidRoleException, SQLException {
+	public static boolean findRoleByName(String name) throws InvalidRoleException, SQLException, DAOException {
 		if (RoleValidator.validateName(name)) {
 			RoleDao.findRoleByName(name);
 		}

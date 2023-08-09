@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
  * Role class.
  * 
  */
-public class TestRole {
+class TestRole {
 
 	@Test
 	void testDefaultConstructor() {

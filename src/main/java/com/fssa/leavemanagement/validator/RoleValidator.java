@@ -7,7 +7,12 @@ import com.fssa.leavemanagement.exceptions.InvalidRoleException;
 import com.fssa.leavemanagement.model.Role;
 
 public class RoleValidator {
+	private RoleValidator() {
+//	private constructor
+	}
+
 	/**
+	 * 
 	 * Validate a Role object to ensure that its data is valid.
 	 * 
 	 * @param role The Role object to be validated.

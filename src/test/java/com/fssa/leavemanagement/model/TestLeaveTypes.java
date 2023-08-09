@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
  * tests the values() method of the LeaveTypes enum to ensure all enum values
  * are correctly defined
  */
-public class TestLeaveTypes {
+class TestLeaveTypes {
 
 	@Test
 	void testEnumValues() {

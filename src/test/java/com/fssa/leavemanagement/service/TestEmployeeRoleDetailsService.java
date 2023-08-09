@@ -17,7 +17,7 @@ import com.fssa.leavemanagement.model.EmployeeRoleDetails;
  * @author PranawMurugesan
  *
  */
-public class TestEmployeeRoleDetailsService {
+class TestEmployeeRoleDetailsService {
 	@Test
 	void testAddEmployeeRoleDetails() throws DAOException {
 		EmployeeRoleDetails erd = new EmployeeRoleDetails();
@@ -37,7 +37,7 @@ public class TestEmployeeRoleDetailsService {
 	}
 
 	@Test
-	void testGetAllEmployeeRoleDetails() {
+	void testGetAllEmployeeRoleDetails() throws DAOException {
 		Assertions.assertTrue(EmployeeRoleDetailsService.getAllEmployeeRoleDetails());
 	}
 

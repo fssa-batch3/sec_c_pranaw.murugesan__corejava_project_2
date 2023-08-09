@@ -18,7 +18,10 @@ import com.fssa.leavemanagement.util.Logger;
 import com.fssa.leavemanagement.validator.EmployeeValidator;
 
 public class EmployeeDao {
-
+	
+	private EmployeeDao() {
+        // Private constructor to prevent instantiation from outside the class
+    }
 	/**
 	 * Logger for print information
 	 */
@@ -30,8 +33,9 @@ public class EmployeeDao {
 	 * @param name
 	 * @return
 	 * @throws SQLException
+	 * @throws DAOException 
 	 */
-	public static int getEmployeeIdByName(String name) throws SQLException {
+	public static int getEmployeeIdByName(String name) throws SQLException, DAOException {
 		int id = 0;
 		String query = "SELECT id FROM employee WHERE name = ?";
 		try (Connection connection = ConnectionUtil.getConnection()) {
@@ -82,9 +86,10 @@ public class EmployeeDao {
 	 * @param role
 	 * @return
 	 * @throws InvalidEmployeeException
+	 * @throws DAOException 
 	 * @throws
 	 */
-	public static boolean addEmployee(Employee employee, String role) throws InvalidEmployeeException {
+	public static boolean addEmployee(Employee employee, String role) throws InvalidEmployeeException, DAOException {
 		int employeeRoleDetailsRows = 0;
 		try {
 			EmployeeValidator.validateEmployee(employee);
@@ -130,7 +135,7 @@ public class EmployeeDao {
 						}
 					}
 
-					return (rows > 0 && employeeRoleDetailsRows > 0) ? true : false;
+					return (rows > 0 && employeeRoleDetailsRows > 0);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -149,7 +154,7 @@ public class EmployeeDao {
 					pst.setString(4, employee.getPassword());
 					pst.setDate(5, java.sql.Date.valueOf(employee.getDateOfRelieve()));
 					int rows = pst.executeUpdate();
-					return (rows > 0) ? true : false;
+					return (rows > 0);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -165,8 +170,9 @@ public class EmployeeDao {
 	 * @param name
 	 * @return
 	 * @throws SQLException
+	 * @throws DAOException 
 	 */
-	public static String getRoleByEmployeeName(String name) throws SQLException {
+	public static String getRoleByEmployeeName(String name) throws SQLException, DAOException {
 		String role = null;
 		String query = "SELECT e.name AS employee_name, r.name AS role_name FROM "
 				+ "employee AS e LEFT JOIN employee_role_details AS erd ON e.id = "
@@ -223,7 +229,7 @@ public class EmployeeDao {
 
 				int rows = pst.executeUpdate();
 
-				return (rows > 0) ? true : false;
+				return (rows > 0);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -256,7 +262,7 @@ public class EmployeeDao {
 					deleteEmployeeRow = pst1.executeUpdate();
 				}
 
-				return (rows > 0 && deleteEmployeeRow > 0) ? true : false;
+				return (rows > 0 && deleteEmployeeRow > 0);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

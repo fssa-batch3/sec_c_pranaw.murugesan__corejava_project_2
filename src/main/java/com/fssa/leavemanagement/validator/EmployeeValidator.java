@@ -7,6 +7,9 @@ import com.fssa.leavemanagement.exceptions.InvalidEmployeeException;
 import com.fssa.leavemanagement.model.Employee;
 
 public class EmployeeValidator {
+	private EmployeeValidator() {
+//		private constructor
+	}
 
 	/**
 	 * Validate an Employee object to ensure that its data is valid.

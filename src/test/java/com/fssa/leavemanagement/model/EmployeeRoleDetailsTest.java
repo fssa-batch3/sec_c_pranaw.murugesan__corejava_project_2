@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * EmployeeRoleDetails class. It tests the getters, setters, and constructor of
  * the EmployeeRoleDetails class.
  */
-public class EmployeeRoleDetailsTest {
+class EmployeeRoleDetailsTest {
 
 	@Test
 	void testGetSetRoleId() {

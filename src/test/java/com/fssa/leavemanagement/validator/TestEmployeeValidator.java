@@ -19,7 +19,7 @@ import com.fssa.leavemanagement.model.Employee;
  * @author PranawMurugesan
  *
  */
-public class TestEmployeeValidator {
+class TestEmployeeValidator {
 
 	static LocalDate join = LocalDate.of(2023, 07, 27);
 	static Employee employee = new Employee("pranaw", "pranaw@gmail.com", "IFresh100%", join, true, null, null);

@@ -22,17 +22,17 @@ import com.fssa.leavemanagement.model.Employee;
  * @author PranawMurugesan
  *
  */
-public class TestEmployeeService {
+class TestEmployeeService {
 
 	@Test
-	void testAddEmployee() throws InvalidEmployeeException {
+	void testAddEmployee() throws InvalidEmployeeException, DAOException {
 		Employee emp = new Employee("pranaw", "pranaw5@gmail.com", "IPranaw@123%", LocalDate.of(2021, 10, 10), true,
 				null, null);
 		Assertions.assertTrue(EmployeeService.addEmployee(emp, "CEO"));
 	}
 
 	@Test
-	void testInvalidAddEmployee() {
+	void testInvalidAddEmployee() throws DAOException {
 
 		try {
 			Assertions.assertTrue(EmployeeService.addEmployee(null, null));

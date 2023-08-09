@@ -9,6 +9,9 @@ import com.fssa.leavemanagement.model.Employee;
 import com.fssa.leavemanagement.validator.EmployeeValidator;
 
 public class EmployeeService {
+	private EmployeeService() {
+//		private constructor
+	}
 
 	/**
 	 * Add an employee to the database.
@@ -18,8 +21,9 @@ public class EmployeeService {
 	 * @param role     The role of the employee to be added.
 	 * @return true if the employee is added successfully, false otherwise.
 	 * @throws InvalidEmployeeException if the employee data is invalid.
+	 * @throws DAOException 
 	 */
-	public static boolean addEmployee(Employee employee, String role) throws InvalidEmployeeException {
+	public static boolean addEmployee(Employee employee, String role) throws InvalidEmployeeException, DAOException {
 		if (EmployeeValidator.validateEmployee(employee)) {
 			EmployeeDao.addEmployee(employee, role);
 		}
@@ -37,7 +41,7 @@ public class EmployeeService {
 	 *                                  employees.
 	 * @throws SQLException             if a general SQL exception occurs.
 	 */
-	public static boolean readEmployee() throws InvalidEmployeeException, DAOException, SQLException {
+	public static boolean readEmployee() throws DAOException, SQLException {
 		EmployeeDao.getAllEmployee();
 		return true;
 	}
