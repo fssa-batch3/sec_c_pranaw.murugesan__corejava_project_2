@@ -18,10 +18,11 @@ import com.fssa.leavemanagement.util.Logger;
 import com.fssa.leavemanagement.validator.EmployeeValidator;
 
 public class EmployeeDao {
-	
+
 	private EmployeeDao() {
-        // Private constructor to prevent instantiation from outside the class
-    }
+		// Private constructor to prevent instantiation from outside the class
+	}
+
 	/**
 	 * Logger for print information
 	 */
@@ -33,7 +34,7 @@ public class EmployeeDao {
 	 * @param name
 	 * @return
 	 * @throws SQLException
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	public static int getEmployeeIdByName(String name) throws SQLException, DAOException {
 		int id = 0;
@@ -86,7 +87,7 @@ public class EmployeeDao {
 	 * @param role
 	 * @return
 	 * @throws InvalidEmployeeException
-	 * @throws DAOException 
+	 * @throws DAOException
 	 * @throws
 	 */
 	public static boolean addEmployee(Employee employee, String role) throws InvalidEmployeeException, DAOException {
@@ -94,7 +95,6 @@ public class EmployeeDao {
 		try {
 			EmployeeValidator.validateEmployee(employee);
 		} catch (InvalidEmployeeException e) {
-			e.printStackTrace();
 			throw new InvalidEmployeeException("Invalid employee passed to DAO Layer", e);
 		}
 
@@ -111,7 +111,7 @@ public class EmployeeDao {
 					pst.setString(4, hashPassword(employee.getPassword()));
 
 					int rows = pst.executeUpdate();
-					
+
 					int roleId = RoleDao.getRoleIdByName(role);
 					int employeeId = EmployeeDao.getEmployeeIdByName(employee.getName());
 					if (role.equals("CEO")) {
@@ -138,7 +138,6 @@ public class EmployeeDao {
 					return (rows > 0 && employeeRoleDetailsRows > 0);
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
 				throw new InvalidEmployeeException(EmployeeErrors.CANNOT_ADD_EMPLOYEE);
 			}
 		} else {
@@ -157,7 +156,6 @@ public class EmployeeDao {
 					return (rows > 0);
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
 				throw new InvalidEmployeeException(EmployeeErrors.CANNOT_ADD_EMPLOYEE);
 			}
 		}
@@ -170,7 +168,7 @@ public class EmployeeDao {
 	 * @param name
 	 * @return
 	 * @throws SQLException
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	public static String getRoleByEmployeeName(String name) throws SQLException, DAOException {
 		String role = null;
@@ -203,7 +201,6 @@ public class EmployeeDao {
 		try {
 			EmployeeValidator.validateEmployee(employee);
 		} catch (InvalidEmployeeException e) {
-			e.printStackTrace();
 			throw new DAOException("Invalid employee passed to DAO Layer", e);
 		}
 
@@ -232,7 +229,6 @@ public class EmployeeDao {
 				return (rows > 0);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new DAOException(e.getMessage());
 		}
 	}
@@ -265,7 +261,6 @@ public class EmployeeDao {
 				return (rows > 0 && deleteEmployeeRow > 0);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new DAOException(e.getMessage());
 		}
 	}
@@ -303,8 +298,6 @@ public class EmployeeDao {
 					return true;
 				}
 			} catch (SQLException e) {
-
-				e.printStackTrace();
 				throw new DAOException(e);
 			}
 
@@ -339,7 +332,6 @@ public class EmployeeDao {
 					}
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
 				throw new DAOException(e);
 			}
 		}

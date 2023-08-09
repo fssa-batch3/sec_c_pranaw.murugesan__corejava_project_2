@@ -1,5 +1,7 @@
 package com.fssa.leavemanagement.exceptions;
 
+import com.fssa.leavemanagement.errors.EmployeeErrors;
+
 public class InvalidEmployeeException extends Exception {
 
 	private static final long serialVersionUID = 1L;
@@ -32,5 +34,7 @@ public class InvalidEmployeeException extends Exception {
 	public InvalidEmployeeException(String msg, Throwable te) {
 		super(msg, te);
 	}
+
+	
 
 }

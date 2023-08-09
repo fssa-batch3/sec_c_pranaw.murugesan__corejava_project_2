@@ -7,15 +7,12 @@ package com.fssa.leavemanagement.errors;
  * various validation checks and error handling related to employees. Each error
  * message describes the reason for the error and provides guidance on how to
  * fix it. The constants in this interface are used for better code organization
- * and to avoid hardcoding error messages in the codebase. This interface should
- * be implemented wherever custom error messages related to employees are
- * required. 
- * Example Usage: 
- * String errorMessage = EmployeeErrors.INVALID_NAME; 
- * System.out.println(errorMessage); 
- * Output:
- * "Invalid Employee Name cannot be empty or lesser than 3 characters"
- * Similarly, other error messages can be accessed and used in the application.
+ * and to avoid hard coding error messages in the code base. This interface
+ * should be implemented wherever custom error messages related to employees are
+ * required. Example Usage: String errorMessage = EmployeeErrors.INVALID_NAME;
+ * System.out.println(errorMessage); Output: "Invalid Employee Name cannot be
+ * empty or lesser than 3 characters" Similarly, other error messages can be
+ * accessed and used in the application.
  * 
  * @author PranawMurugesan
  *

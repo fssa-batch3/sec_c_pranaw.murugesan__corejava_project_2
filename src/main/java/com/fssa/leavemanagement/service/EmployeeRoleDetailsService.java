@@ -12,6 +12,7 @@ public class EmployeeRoleDetailsService {
 	private EmployeeRoleDetailsService() {
 //		private constructor
 	}
+
 	static Logger logger = new Logger();
 
 	/**
@@ -53,14 +54,13 @@ public class EmployeeRoleDetailsService {
 	 * 
 	 * @return true if all employee role details are retrieved successfully, false
 	 *         otherwise.
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	public static boolean getAllEmployeeRoleDetails() throws DAOException {
 		try {
 			return EmployeeRoleDetailsDao.getAllEmployeeRoleDetails();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
+			throw new DAOException(e.getMessage());
 		}
 	}
 

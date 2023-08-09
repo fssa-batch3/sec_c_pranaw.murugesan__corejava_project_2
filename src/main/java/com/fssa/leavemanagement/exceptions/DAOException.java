@@ -1,5 +1,7 @@
 package com.fssa.leavemanagement.exceptions;
 
+import com.fssa.leavemanagement.errors.EmployeeErrors;
+
 public class DAOException extends Exception {
 
 	private static final long serialVersionUID = 1L;
@@ -30,6 +32,10 @@ public class DAOException extends Exception {
 	 */
 	public DAOException(String msg, Throwable te) {
 		super(msg, te);
+	}
+
+	public DAOException(EmployeeErrors invalidEmployeeRoleDetail) {
+		// TODO Auto-generated constructor stub
 	}
 
 }

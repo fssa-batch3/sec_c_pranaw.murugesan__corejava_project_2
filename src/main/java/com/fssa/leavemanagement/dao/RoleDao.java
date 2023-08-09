@@ -43,7 +43,6 @@ public class RoleDao {
 		try {
 			RoleValidator.validate(role);
 		} catch (InvalidRoleException e) {
-			e.printStackTrace();
 			throw new InvalidRoleException("Invalid Role passed to DAO Layer");
 		}
 
@@ -108,7 +107,6 @@ public class RoleDao {
 				return (rows > 0);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new InvalidRoleException(e.getMessage());
 		}
 	}
@@ -167,7 +165,6 @@ public class RoleDao {
 					}
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
 				throw new InvalidRoleException("Cannot find role");
 			}
 		}

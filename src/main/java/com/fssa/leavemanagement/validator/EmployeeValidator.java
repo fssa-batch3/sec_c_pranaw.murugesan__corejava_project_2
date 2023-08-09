@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import com.fssa.leavemanagement.errors.EmployeeErrors;
 import com.fssa.leavemanagement.exceptions.InvalidEmployeeException;
 import com.fssa.leavemanagement.model.Employee;
+import com.fssa.leavemanagement.util.Logger;
 
 public class EmployeeValidator {
 	private EmployeeValidator() {
@@ -21,6 +22,7 @@ public class EmployeeValidator {
 	public static boolean validateEmployee(Employee employee) throws InvalidEmployeeException {
 		if (employee == null) {
 			throw new InvalidEmployeeException(EmployeeErrors.INVALID_EMPLOYEE);
+
 		}
 		try {
 			validateName(employee.getName());
@@ -92,7 +94,7 @@ public class EmployeeValidator {
 	 * @throws InvalidEmployeeException if the password is invalid.
 	 */
 	public static boolean validatePassword(String password) throws InvalidEmployeeException {
-		String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$";
+		String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$";
 		boolean matches = Pattern.compile(regex).matcher(password).matches();
 		if (matches) {
 			return true;
@@ -100,5 +102,4 @@ public class EmployeeValidator {
 			throw new InvalidEmployeeException(EmployeeErrors.INVALID_PASSWORD);
 		}
 	}
-
 }
