@@ -20,36 +20,10 @@ Employee leave management can be a complex and time-consuming task for HR depart
 ## Data Privacy and Security
 We understand the importance of data privacy and security in managing sensitive employee information. The Leave Management Application employs industry-standard encryption and secure data storage practices to protect user data from unauthorized access.
 
+## DB Design
+- [Sql Script](https://github.com/fssa-batch3/sec_c_pranaw.murugesan__corejava_project_2/blob/main/src/main/sql/ProjectQueries.sql)
 
-
-## DB TABLES
-### Employee Table
-
-| Field             | Type         | Null | Key | Default             | Extra          |
-|-------------------|--------------|------|-----|---------------------|----------------|
-| id                | int          | NO   | PRI | auto_increment      |                |
-| name              | varchar(100) | NO   |     |                     |                |
-| email             | varchar(100) | NO   | UNI |                     |                |
-| password          | varchar(250) | NO   |     |                     |                |
-| date_of_joining   | timestamp    | YES  |     | current_timestamp   | on update CURRENT_TIMESTAMP |
-| is_active         | boolean      | NO   |     | 1                   |                |
-| date_of_relieving | date         | YES  |     | NULL                |                |
-
-### Role Table
-
-| Field | Type         | Null | Key | Default         | Extra          |
-|-------|--------------|------|-----|-----------------|----------------|
-| id    | int          | NO   | PRI | auto_increment  |                |
-| name  | varchar(200) | NO   | UNI |                 |                |
-
-### Employee_Role_Details Table
-
-| Field               | Type  | Null | Key | Default         | Extra          |
-|---------------------|-------|------|-----|-----------------|----------------|
-| id                  | int   | NO   | PRI | auto_increment  |                |
-| employee_id         | int   | NO   | MUL |                 |                |
-| role_id             | int   | NO   | MUL |                 |                |
-| reporting_manager_id| int   | YES  | MUL |                 |                |
+![image](https://github.com/fssa-batch3/sec_c_pranaw.murugesan__corejava_project_2/assets/85377859/ce720e47-0141-49ff-866e-893a400484c3)
 
 ## Technologies Used
 
