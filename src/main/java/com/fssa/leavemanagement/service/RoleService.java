@@ -1,8 +1,10 @@
 package com.fssa.leavemanagement.service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.fssa.leavemanagement.dao.RoleDao;
+import com.fssa.leavemanagement.errors.RoleErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidRoleException;
 import com.fssa.leavemanagement.model.Role;
@@ -39,9 +41,8 @@ public class RoleService {
 	 * @throws SQLException         if a general SQL exception occurs.
 	 * @throws DAOException
 	 */
-	public static boolean readRole() throws InvalidRoleException, SQLException, DAOException {
-		RoleDao.readRole();
-		return true;
+	public static List<Role> getAllRole() throws InvalidRoleException, SQLException, DAOException {
+	    return RoleDao.getAllRole();
 	}
 
 	/**
@@ -70,11 +71,13 @@ public class RoleService {
 	 * @throws SQLException         if a general SQL exception occurs.
 	 * @throws DAOException
 	 */
-	public static boolean findRoleByName(String name) throws InvalidRoleException, SQLException, DAOException {
-		if (RoleValidator.validateName(name)) {
-			RoleDao.findRoleByName(name);
-		}
-		return true;
+
+	
+	public static Role findRoleByName(String name) throws InvalidRoleException, SQLException, DAOException {
+	    if (RoleValidator.validateName(name)) {
+	        return RoleDao.findRoleByName(name);
+	    }
+	    throw new InvalidRoleException(RoleErrors.ROLE_NOT_FOUND);
 	}
 
 }

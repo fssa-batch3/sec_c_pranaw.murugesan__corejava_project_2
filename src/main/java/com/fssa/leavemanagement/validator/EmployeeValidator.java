@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 import com.fssa.leavemanagement.errors.EmployeeErrors;
 import com.fssa.leavemanagement.exceptions.InvalidEmployeeException;
 import com.fssa.leavemanagement.model.Employee;
-import com.fssa.leavemanagement.util.Logger;
 
 public class EmployeeValidator {
 	private EmployeeValidator() {

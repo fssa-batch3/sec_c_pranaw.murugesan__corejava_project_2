@@ -2,6 +2,7 @@ package com.fssa.leavemanagement.service;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,6 @@ import com.fssa.leavemanagement.model.Employee;
  *
  */
 class TestEmployeeService {
-
 	@Test
 	void testAddEmployee() throws InvalidEmployeeException, DAOException {
 		Employee emp = new Employee("pranaw", "pranaw5@gmail.com", "IPranaw@123%", LocalDate.of(2021, 10, 10), true,
@@ -90,24 +90,20 @@ class TestEmployeeService {
 	}
 
 	@Test
-	void testReadEmployee() throws InvalidEmployeeException, DAOException, SQLException {
-		Assertions.assertTrue(EmployeeService.readEmployee());
+	void testGetAllEmployee() throws DAOException, SQLException {
+		List<Employee> employeeList = EmployeeService.getAllEmployee();
+		Assertions.assertNotNull(employeeList);
+		Assertions.assertFalse(employeeList.isEmpty());
 	}
 
 	@Test
 	void testFindEmployeeByName() throws InvalidEmployeeException, DAOException, SQLException {
 		String find = "pranaw";
-		Assertions.assertTrue(EmployeeService.findEmployeeByName(find));
-	}
-
-	@Test
-	void testInvalidFindEmployeeByName() {
-		String find = "ab";
-		try {
-			Assertions.assertTrue(EmployeeService.findEmployeeByName(find));
-		} catch (InvalidEmployeeException | DAOException | SQLException e) {
-			Assertions.assertEquals(EmployeeErrors.INVALID_NAME, e.getMessage());
-		}
+		Employee foundEmployee = EmployeeService.findEmployeeByName(find);
+		Assertions.assertNotNull(foundEmployee);
+		String nonExistentName = "nonexistent";
+		Employee nonExistentEmployee = EmployeeService.findEmployeeByName(nonExistentName);
+		Assertions.assertNull(nonExistentEmployee);
 	}
 
 }

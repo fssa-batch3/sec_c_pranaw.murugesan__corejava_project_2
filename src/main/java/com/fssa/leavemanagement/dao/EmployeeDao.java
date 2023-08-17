@@ -8,13 +8,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fssa.leavemanagement.errors.EmployeeErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidEmployeeException;
 import com.fssa.leavemanagement.model.Employee;
 import com.fssa.leavemanagement.util.ConnectionUtil;
-import com.fssa.leavemanagement.util.Logger;
 import com.fssa.leavemanagement.validator.EmployeeValidator;
 
 public class EmployeeDao {
@@ -22,11 +25,6 @@ public class EmployeeDao {
 	private EmployeeDao() {
 		// Private constructor to prevent instantiation from outside the class
 	}
-
-	/**
-	 * Logger for print information
-	 */
-	static Logger logger = new Logger();
 
 	/**
 	 * This method will return the id of the employee
@@ -90,6 +88,32 @@ public class EmployeeDao {
 	 * @throws DAOException
 	 * @throws
 	 */
+	private static void insertLeaveBalances(Connection connection, int employeeId) throws SQLException {
+		String queryLeaveBalance = "INSERT INTO employee_leave_balance(employee_id, leave_type, no_of_days) values(?,?,?)";
+
+		try (PreparedStatement pst1 = connection.prepareStatement(queryLeaveBalance)) {
+			// Insert CL
+			pst1.setInt(1, employeeId);
+			pst1.setString(2, "CL");
+			pst1.setInt(3, 10);
+			pst1.addBatch();
+
+			// Insert SL
+			pst1.setInt(1, employeeId);
+			pst1.setString(2, "SL");
+			pst1.setInt(3, 5);
+			pst1.addBatch();
+
+			// Insert EL
+			pst1.setInt(1, employeeId);
+			pst1.setString(2, "EL");
+			pst1.setInt(3, 5);
+			pst1.addBatch();
+
+			pst1.executeBatch();
+		}
+	}
+
 	public static boolean addEmployee(Employee employee, String role) throws InvalidEmployeeException, DAOException {
 		int employeeRoleDetailsRows = 0;
 		try {
@@ -122,6 +146,7 @@ public class EmployeeDao {
 							pst1.setInt(2, roleId);
 							employeeRoleDetailsRows = pst1.executeUpdate();
 						}
+						insertLeaveBalances(connection, employeeId);
 					} else {
 						int managerId = EmployeeDao.getEmployeeIdByName(employee.getManager().getName());
 						String queryEmployeeDetail = "INSERT INTO employee_role_details "
@@ -133,6 +158,7 @@ public class EmployeeDao {
 
 							employeeRoleDetailsRows = pst1.executeUpdate();
 						}
+						insertLeaveBalances(connection, employeeId);
 					}
 
 					return (rows > 0 && employeeRoleDetailsRows > 0);
@@ -245,8 +271,12 @@ public class EmployeeDao {
 	public static boolean deleteEmployee(Employee employee) throws DAOException, SQLException {
 		int deleteEmployeeRow = 0;
 		int id = EmployeeDao.getEmployeeIdByName(employee.getName());
-
+		String deleteLeaveBalance = "DELETE FROM employee_leave_balance WHERE employee_id = ?";
 		try (Connection connection = ConnectionUtil.getConnection()) {
+			try (PreparedStatement pst = connection.prepareStatement(deleteLeaveBalance)) {
+				pst.setInt(1, id);
+				pst.executeUpdate();
+			}
 			String deleteEmployeeDetails = "DELETE FROM employee_role_details" + " WHERE employee_id = ?";
 			try (PreparedStatement pst = connection.prepareStatement(deleteEmployeeDetails)) {
 				pst.setInt(1, id);
@@ -273,8 +303,9 @@ public class EmployeeDao {
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
-	public static boolean getAllEmployee() throws DAOException, SQLException {
-
+	public static List<Employee> getAllEmployee() throws DAOException, SQLException {
+		Employee employee = new Employee();
+		List<Employee> employeeList = new ArrayList<>();
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			String query = "SELECT * FROM employee";
 			try (Statement statement = connection.createStatement()) {
@@ -283,19 +314,22 @@ public class EmployeeDao {
 					 * this will run the query and return the value
 					 */
 					while (resultSet.next()) {
-						/* printing columns until there is no values */
-
-						logger.info("id: " + resultSet.getInt(1));
-						logger.info("name: " + resultSet.getString(2));
-						logger.info("email: " + resultSet.getString(3));
-						logger.info("password: " + resultSet.getString(4));
-						logger.info("date of joining: " + resultSet.getDate(5));
-						logger.info("active: " + resultSet.getBoolean(6));
-						logger.info("date of relieving: " + resultSet.getDate(7));
-						logger.info("\n");
+//						adding employee to array list
+						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy,MM,dd");
+						String date = resultSet.getString("date_of_joining");
+						LocalDate joinDate = LocalDate.parse(date, formatter);
+						employee.setDateOfJoin(joinDate);
+						date = resultSet.getString("date_of_relieving");
+						LocalDate relieveDate = LocalDate.parse(date, formatter);
+						employee.setDateOfRelieve(relieveDate);
+						employee.setEmail(resultSet.getString("email"));
+						employee.setName(resultSet.getString("name"));
+						employee.setPassword(resultSet.getString("password"));
+						employee.setStatus(resultSet.getBoolean("is_active"));
+						employeeList.add(employee);
 
 					}
-					return true;
+					return employeeList;
 				}
 			} catch (SQLException e) {
 				throw new DAOException(e);
@@ -314,28 +348,39 @@ public class EmployeeDao {
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
-	public static boolean findEmployeeByName(String name) throws DAOException, SQLException {
+	public static Employee findEmployeeByName(String name) throws DAOException, SQLException {
+
+		Employee employee = new Employee();
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			String query = "SELECT * FROM employee WHERE name = ?";
 			try (PreparedStatement pst = connection.prepareStatement(query)) {
 				pst.setString(1, name);
 				try (ResultSet resultSet = pst.executeQuery()) {
 					if (resultSet.next()) {
+						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+						String date = resultSet.getString("date_of_joining");
+						LocalDate joinDate = LocalDate.parse(date, formatter);
+						employee.setDateOfJoin(joinDate);
 
-						logger.info("id: " + resultSet.getInt(1));
-						logger.info("name: " + resultSet.getString(2));
-						logger.info("email: " + resultSet.getString(3));
-						logger.info("password: " + resultSet.getString(4));
-						logger.info("date_of_joining: " + resultSet.getString(5));
-						logger.info("is_active: " + resultSet.getString(6));
-						logger.info("date_of_relieving: " + resultSet.getString(7));
+						date = resultSet.getString("date_of_relieving");
+						if (date != null) {
+							LocalDate relieveDate = LocalDate.parse(date, formatter);
+							employee.setDateOfRelieve(relieveDate);
+						}
+
+						employee.setEmail(resultSet.getString("email"));
+						employee.setName(resultSet.getString("name"));
+						employee.setPassword(resultSet.getString("password"));
+						employee.setStatus(resultSet.getBoolean("is_active"));
+					} else {
+						employee = null;
 					}
 				}
 			} catch (SQLException e) {
-				throw new DAOException(e);
+				throw new DAOException(e.getMessage());
 			}
 		}
-		return true;
+		return employee;
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.fssa.leavemanagement.service;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -55,13 +56,18 @@ class TestRoleService {
 	}
 
 	@Test
-	void testReadRole() throws InvalidRoleException, SQLException, DAOException {
-		Assertions.assertTrue(RoleService.readRole());
+	void testGetAllRole() throws InvalidRoleException, SQLException, DAOException {
+		List<Role> roles = RoleService.getAllRole();
+
+		Assertions.assertNotNull(roles);
+		Assertions.assertFalse(roles.isEmpty());
 	}
 
 	@Test
 	void testFindRoleByName() throws InvalidRoleException, SQLException, DAOException {
 		Role role = new Role(1, "CEO");
-		Assertions.assertTrue(RoleService.findRoleByName(role.getName()));
+		Role foundRole = RoleService.findRoleByName(role.getName());
+
+		Assertions.assertNotNull(foundRole);
 	}
 }

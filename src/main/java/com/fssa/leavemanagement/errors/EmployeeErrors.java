@@ -17,7 +17,11 @@ package com.fssa.leavemanagement.errors;
  * @author PranawMurugesan
  *
  */
-public interface EmployeeErrors {
+public class EmployeeErrors {
+	private EmployeeErrors() {
+//		private constructor
+	}
+
 	public static final String INVALID_NAME = "Invalid Employee Name cannot be empty or lesser than 3 characters";
 	public static final String INVALID_EMAIL = "Email should contains @ and shouldn't have spaces";
 	public static final String INVALID_PASSWORD = "Minimum eight characters, at least one letter, one number and one special character";

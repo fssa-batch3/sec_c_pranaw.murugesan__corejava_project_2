@@ -1,6 +1,8 @@
 package com.fssa.leavemanagement.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fssa.leavemanagement.dao.EmployeeDao;
 import com.fssa.leavemanagement.exceptions.DAOException;
@@ -21,7 +23,7 @@ public class EmployeeService {
 	 * @param role     The role of the employee to be added.
 	 * @return true if the employee is added successfully, false otherwise.
 	 * @throws InvalidEmployeeException if the employee data is invalid.
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	public static boolean addEmployee(Employee employee, String role) throws InvalidEmployeeException, DAOException {
 		if (EmployeeValidator.validateEmployee(employee)) {
@@ -41,9 +43,10 @@ public class EmployeeService {
 	 *                                  employees.
 	 * @throws SQLException             if a general SQL exception occurs.
 	 */
-	public static boolean readEmployee() throws DAOException, SQLException {
-		EmployeeDao.getAllEmployee();
-		return true;
+	public static List<Employee> getAllEmployee() throws DAOException, SQLException {
+		List<Employee> employeeList = new ArrayList<>();
+		employeeList = EmployeeDao.getAllEmployee();
+		return employeeList;
 	}
 
 	/**
@@ -94,11 +97,12 @@ public class EmployeeService {
 	 *                                  employee.
 	 * @throws SQLException             if a general SQL exception occurs.
 	 */
-	public static boolean findEmployeeByName(String name) throws InvalidEmployeeException, DAOException, SQLException {
+	public static Employee findEmployeeByName(String name) throws InvalidEmployeeException, DAOException, SQLException {
+		Employee employee = new Employee();
 		if (EmployeeValidator.validateName(name)) {
-			EmployeeDao.findEmployeeByName(name);
+			employee = EmployeeDao.findEmployeeByName(name);
 		}
-		return true;
+		return employee;
 	}
 
 }
