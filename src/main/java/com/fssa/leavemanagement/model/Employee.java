@@ -3,13 +3,14 @@ package com.fssa.leavemanagement.model;
 import java.time.LocalDate;
 
 public class Employee {
+//	add id 
 	private String name;
 	private String email;
 	private String password;
-	LocalDate dateOfJoin;
-	boolean status;
-	LocalDate dateOfRelieve;
-	Employee manager;
+	private LocalDate dateOfJoining;
+	private boolean status;
+	private LocalDate dateOfRelieving;
+	private Employee manager;
 
 	/**
 	 * Default Constructor for creating an empty Employee object.
@@ -34,10 +35,18 @@ public class Employee {
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.dateOfJoin = dateOfJoin;
+		this.dateOfJoining = dateOfJoin;
 		this.status = status;
-		this.dateOfRelieve = dateOfRelieve;
+		this.dateOfRelieving = dateOfRelieve;
 		this.manager = manager;
+	}
+
+	public Employee(String name, String email, String password, LocalDate dateOfJoining, boolean status) {
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.dateOfJoining = dateOfJoining;
+		this.status = status;
 	}
 
 	/**
@@ -100,7 +109,7 @@ public class Employee {
 	 * @return The date of joining of the employee.
 	 */
 	public LocalDate getDateOfJoin() {
-		return dateOfJoin;
+		return dateOfJoining;
 	}
 
 	/**
@@ -109,7 +118,7 @@ public class Employee {
 	 * @param dateOfJoin The date of joining of the employee to be set.
 	 */
 	public void setDateOfJoin(LocalDate dateOfJoin) {
-		this.dateOfJoin = dateOfJoin;
+		this.dateOfJoining = dateOfJoin;
 	}
 
 	/**
@@ -136,7 +145,7 @@ public class Employee {
 	 * @return The date of relieving of the employee (or null if not applicable).
 	 */
 	public LocalDate getDateOfRelieve() {
-		return dateOfRelieve;
+		return dateOfRelieving;
 	}
 
 	/**
@@ -145,7 +154,7 @@ public class Employee {
 	 * @param dateOfRelieve The date of relieving of the employee to be set.
 	 */
 	public void setDateOfRelieve(LocalDate dateOfRelieve) {
-		this.dateOfRelieve = dateOfRelieve;
+		this.dateOfRelieving = dateOfRelieve;
 	}
 
 	/**

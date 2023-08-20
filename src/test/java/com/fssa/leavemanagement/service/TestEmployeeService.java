@@ -25,14 +25,13 @@ import com.fssa.leavemanagement.model.Employee;
  */
 class TestEmployeeService {
 	@Test
-	void testAddEmployee() throws InvalidEmployeeException, DAOException {
-		Employee emp = new Employee("pranaw", "pranaw5@gmail.com", "IPranaw@123%", LocalDate.of(2021, 10, 10), true,
-				null, null);
+	void testAddEmployee() throws InvalidEmployeeException, DAOException, SQLException {
+		Employee emp = new Employee("pranaw", "pranaw5@gmail.com", "IPranaw@123%", LocalDate.of(2021, 10, 10), true);
 		Assertions.assertTrue(EmployeeService.addEmployee(emp, "CEO"));
 	}
 
 	@Test
-	void testInvalidAddEmployee() throws DAOException {
+	void testInvalidAddEmployee() throws DAOException, SQLException {
 
 		try {
 			Assertions.assertTrue(EmployeeService.addEmployee(null, null));
@@ -44,8 +43,7 @@ class TestEmployeeService {
 
 	@Test
 	void testUpdateEmployee() throws InvalidEmployeeException, DAOException {
-		Employee emp = new Employee("pranaw", "pranaw1@gmail.com", "IPranaw@123%", LocalDate.of(2021, 10, 10), true,
-				null, null);
+		Employee emp = new Employee("pranaw", "pranaw1@gmail.com", "IPranaw@123%", LocalDate.of(2021, 10, 10), true);
 		Assertions.assertTrue(EmployeeService.updateEmployee(emp, 2));
 	}
 

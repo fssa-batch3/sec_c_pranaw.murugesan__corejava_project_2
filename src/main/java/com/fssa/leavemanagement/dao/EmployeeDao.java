@@ -88,45 +88,78 @@ public class EmployeeDao {
 	 * @throws DAOException
 	 * @throws
 	 */
-	private static void insertLeaveBalances(Connection connection, int employeeId) throws SQLException {
+	public static void insertLeaveBalances(int employeeId) throws SQLException, DAOException {
 		String queryLeaveBalance = "INSERT INTO employee_leave_balance(employee_id, leave_type, no_of_days) values(?,?,?)";
+		try (Connection connection = ConnectionUtil.getConnection()) {
 
-		try (PreparedStatement pst1 = connection.prepareStatement(queryLeaveBalance)) {
-			// Insert CL
-			pst1.setInt(1, employeeId);
-			pst1.setString(2, "CL");
-			pst1.setInt(3, 10);
-			pst1.addBatch();
+			try (PreparedStatement pst1 = connection.prepareStatement(queryLeaveBalance)) {
+				// Insert CL
+				pst1.setInt(1, employeeId);
+				pst1.setString(2, "CL");
+				pst1.setInt(3, 10);
+				pst1.addBatch();
 
-			// Insert SL
-			pst1.setInt(1, employeeId);
-			pst1.setString(2, "SL");
-			pst1.setInt(3, 5);
-			pst1.addBatch();
+				// Insert SL
+				pst1.setInt(1, employeeId);
+				pst1.setString(2, "SL");
+				pst1.setInt(3, 5);
+				pst1.addBatch();
 
-			// Insert EL
-			pst1.setInt(1, employeeId);
-			pst1.setString(2, "EL");
-			pst1.setInt(3, 5);
-			pst1.addBatch();
+				// Insert EL
+				pst1.setInt(1, employeeId);
+				pst1.setString(2, "EL");
+				pst1.setInt(3, 5);
+				pst1.addBatch();
 
-			pst1.executeBatch();
+				pst1.executeBatch();
+			}
 		}
+
+	}
+
+	public static boolean addRoleDetails(Employee employee, String role) throws SQLException, DAOException {
+		int roleId = RoleDao.getRoleIdByName(role);
+		int employeeId = EmployeeDao.getEmployeeIdByName(employee.getName());
+
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			int managerId = EmployeeDao.getEmployeeIdByName(employee.getManager().getName());
+			String queryEmployeeDetail = "INSERT INTO employee_role_details "
+					+ "(employee_id,role_id,reporting_manager_id) VALUES (?,?,?);";
+			try (PreparedStatement pst1 = connection.prepareStatement(queryEmployeeDetail)) {
+				pst1.setInt(1, employeeId);
+				pst1.setInt(2, roleId);
+				pst1.setInt(3, managerId);
+
+				pst1.executeUpdate();
+			}
+		}
+		return true;
+	}
+
+	public static boolean addCeoRoleDetails(Employee employee, String role) throws SQLException, DAOException {
+		int roleId = RoleDao.getRoleIdByName(role);
+		int employeeId = EmployeeDao.getEmployeeIdByName(employee.getName());
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			String queryEmployeeDetail = "INSERT INTO employee_role_details" + " (employee_id,role_id) VALUES (?,?);";
+			try (PreparedStatement pst1 = connection.prepareStatement(queryEmployeeDetail)) {
+				pst1.setInt(1, employeeId);
+				pst1.setInt(2, roleId);
+				pst1.executeUpdate();
+			}
+		} catch (SQLException | DAOException e) {
+			e.printStackTrace();
+		}
+		return true;
 	}
 
 	public static boolean addEmployee(Employee employee, String role) throws InvalidEmployeeException, DAOException {
 		int employeeRoleDetailsRows = 0;
-		try {
-			EmployeeValidator.validateEmployee(employee);
-		} catch (InvalidEmployeeException e) {
-			throw new InvalidEmployeeException("Invalid employee passed to DAO Layer", e);
-		}
 
 		if (employee.isStatus()) {
 
 			try (Connection connection = ConnectionUtil.getConnection()) {
 
-				String query = "INSERT INTO employee(name,email, is_active," + "password) VALUES (?,?,?,?);";
+				String query = "INSERT INTO employee(name,email, is_active,password) VALUES (?,?,?,?);";
 
 				try (PreparedStatement pst = connection.prepareStatement(query)) {
 					pst.setString(1, employee.getName());
@@ -136,54 +169,13 @@ public class EmployeeDao {
 
 					int rows = pst.executeUpdate();
 
-					int roleId = RoleDao.getRoleIdByName(role);
-					int employeeId = EmployeeDao.getEmployeeIdByName(employee.getName());
-					if (role.equals("CEO")) {
-						String queryEmployeeDetail = "INSERT INTO employee_role_details"
-								+ " (employee_id,role_id) VALUES (?,?);";
-						try (PreparedStatement pst1 = connection.prepareStatement(queryEmployeeDetail)) {
-							pst1.setInt(1, employeeId);
-							pst1.setInt(2, roleId);
-							employeeRoleDetailsRows = pst1.executeUpdate();
-						}
-						insertLeaveBalances(connection, employeeId);
-					} else {
-						int managerId = EmployeeDao.getEmployeeIdByName(employee.getManager().getName());
-						String queryEmployeeDetail = "INSERT INTO employee_role_details "
-								+ "(employee_id,role_id,reporting_manager_id) VALUES (?,?,?);";
-						try (PreparedStatement pst1 = connection.prepareStatement(queryEmployeeDetail)) {
-							pst1.setInt(1, employeeId);
-							pst1.setInt(2, roleId);
-							pst1.setInt(3, managerId);
-
-							employeeRoleDetailsRows = pst1.executeUpdate();
-						}
-						insertLeaveBalances(connection, employeeId);
-					}
-
 					return (rows > 0 && employeeRoleDetailsRows > 0);
 				}
 			} catch (SQLException e) {
 				throw new InvalidEmployeeException(EmployeeErrors.CANNOT_ADD_EMPLOYEE);
 			}
 		} else {
-
-			try (Connection connection = ConnectionUtil.getConnection()) {
-
-				String query = "INSERT INTO employee(name,email, is_active,"
-						+ "password,date_of_relieving) VALUES (?,?,?,?,?);";
-				try (PreparedStatement pst = connection.prepareStatement(query)) {
-					pst.setString(1, employee.getName());
-					pst.setString(2, employee.getEmail());
-					pst.setBoolean(3, employee.isStatus());
-					pst.setString(4, employee.getPassword());
-					pst.setDate(5, java.sql.Date.valueOf(employee.getDateOfRelieve()));
-					int rows = pst.executeUpdate();
-					return (rows > 0);
-				}
-			} catch (SQLException e) {
-				throw new InvalidEmployeeException(EmployeeErrors.CANNOT_ADD_EMPLOYEE);
-			}
+			throw new DAOException("Cannot add employee who is inactive");
 		}
 
 	}
@@ -200,7 +192,7 @@ public class EmployeeDao {
 		String role = null;
 		String query = "SELECT e.name AS employee_name, r.name AS role_name FROM "
 				+ "employee AS e LEFT JOIN employee_role_details AS erd ON e.id = "
-				+ "erd.employee_id LEFT JOIN role AS r ON erd.role_id = r.id WHERE " + "e.name = ?;";
+				+ "erd.employee_id LEFT JOIN role AS r ON erd.role_id = r.id WHERE e.name = ?;";
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			try (PreparedStatement pst = connection.prepareStatement(query)) {
 				pst.setString(1, name);
@@ -268,30 +260,31 @@ public class EmployeeDao {
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
-	public static boolean deleteEmployee(Employee employee) throws DAOException, SQLException {
-		int deleteEmployeeRow = 0;
-		int id = EmployeeDao.getEmployeeIdByName(employee.getName());
-		String deleteLeaveBalance = "DELETE FROM employee_leave_balance WHERE employee_id = ?";
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			try (PreparedStatement pst = connection.prepareStatement(deleteLeaveBalance)) {
-				pst.setInt(1, id);
-				pst.executeUpdate();
-			}
-			String deleteEmployeeDetails = "DELETE FROM employee_role_details" + " WHERE employee_id = ?";
-			try (PreparedStatement pst = connection.prepareStatement(deleteEmployeeDetails)) {
-				pst.setInt(1, id);
-				int rows = pst.executeUpdate();
+	public static void deleteLeaveBalances(int employeeId) throws SQLException, DAOException {
+		String deleteQuery = "DELETE FROM employee_leave_balance WHERE employee_id = ?";
+		try (Connection connection = ConnectionUtil.getConnection();
+				PreparedStatement pst = connection.prepareStatement(deleteQuery)) {
+			pst.setInt(1, employeeId);
+			pst.executeUpdate();
+		}
+	}
 
-				String deleteEmployee = "DELETE FROM employee WHERE id = ?";
-				try (PreparedStatement pst1 = connection.prepareStatement(deleteEmployee)) {
-					pst1.setInt(1, id);
-					deleteEmployeeRow = pst1.executeUpdate();
-				}
+	public static void deleteEmployeeRoleDetails(int employeeId) throws SQLException, DAOException {
+		String deleteQuery = "DELETE FROM employee_role_details WHERE employee_id = ?";
+		try (Connection connection = ConnectionUtil.getConnection();
+				PreparedStatement pst = connection.prepareStatement(deleteQuery)) {
+			pst.setInt(1, employeeId);
+			pst.executeUpdate();
+		}
+	}
 
-				return (rows > 0 && deleteEmployeeRow > 0);
-			}
-		} catch (SQLException e) {
-			throw new DAOException(e.getMessage());
+	public static boolean deleteEmployeeRecord(int employeeId) throws SQLException, DAOException {
+		String deleteQuery = "DELETE FROM employee WHERE id = ?";
+		try (Connection connection = ConnectionUtil.getConnection();
+				PreparedStatement pst = connection.prepareStatement(deleteQuery)) {
+			pst.setInt(1, employeeId);
+			int rowsDeleted = pst.executeUpdate();
+			return rowsDeleted > 0;
 		}
 	}
 

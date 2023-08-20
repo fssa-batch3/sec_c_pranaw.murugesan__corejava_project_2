@@ -8,9 +8,11 @@ import com.fssa.leavemanagement.dao.EmployeeDao;
 import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidEmployeeException;
 import com.fssa.leavemanagement.model.Employee;
+import com.fssa.leavemanagement.model.RoleTypes;
 import com.fssa.leavemanagement.validator.EmployeeValidator;
 
 public class EmployeeService {
+
 	private EmployeeService() {
 //		private constructor
 	}
@@ -24,10 +26,21 @@ public class EmployeeService {
 	 * @return true if the employee is added successfully, false otherwise.
 	 * @throws InvalidEmployeeException if the employee data is invalid.
 	 * @throws DAOException
+	 * @throws SQLException
 	 */
-	public static boolean addEmployee(Employee employee, String role) throws InvalidEmployeeException, DAOException {
+	public static boolean addEmployee(Employee employee, String role)
+			throws InvalidEmployeeException, DAOException, SQLException {
+		int employeeId = EmployeeDao.getEmployeeIdByName(employee.getName());
 		if (EmployeeValidator.validateEmployee(employee)) {
 			EmployeeDao.addEmployee(employee, role);
+
+		}
+		if (role.equals(RoleTypes.CEO.getName())) {
+			EmployeeDao.addCeoRoleDetails(employee, role);
+		} else {
+
+			EmployeeDao.addRoleDetails(employee, role);
+			EmployeeDao.insertLeaveBalances(employeeId);
 		}
 		return true;
 	}
@@ -80,8 +93,11 @@ public class EmployeeService {
 	 */
 	public static boolean deleteEmployee(Employee employee)
 			throws InvalidEmployeeException, DAOException, SQLException {
+		int employeeId = EmployeeDao.getEmployeeIdByName(employee.getName());
 		if (EmployeeValidator.validateEmployee(employee)) {
-			EmployeeDao.deleteEmployee(employee);
+			EmployeeDao.deleteLeaveBalances(employeeId);
+			EmployeeDao.deleteEmployeeRoleDetails(employeeId);
+			EmployeeDao.deleteEmployeeRecord(employeeId);
 		}
 		return true;
 	}

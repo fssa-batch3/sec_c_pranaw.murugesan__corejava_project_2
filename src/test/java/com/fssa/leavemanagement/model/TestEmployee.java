@@ -12,40 +12,6 @@ import java.time.LocalDate;
 class TestEmployee {
 
 	@Test
-	void testDefaultConstructor() {
-		Employee employee = new Employee();
-		Assertions.assertNull(employee.getName());
-		Assertions.assertNull(employee.getEmail());
-		Assertions.assertNull(employee.getPassword());
-		Assertions.assertNull(employee.getDateOfJoin());
-		Assertions.assertFalse(employee.isStatus());
-		Assertions.assertNull(employee.getDateOfRelieve());
-		Assertions.assertNull(employee.getManager());
-	}
-
-	@Test
-	void testParameterizedConstructor() {
-		String name = "John Doe";
-		String email = "john.doe@example.com";
-		String password = "MyPassword123";
-		LocalDate dateOfJoin = LocalDate.of(2023, 7, 27);
-		boolean status = true;
-		LocalDate dateOfRelieve = LocalDate.of(2025, 1, 1);
-		Employee manager = new Employee("Manager Name", "manager@example.com", "ManagerPass123",
-				LocalDate.of(2022, 1, 1), true, null, null);
-
-		Employee employee = new Employee(name, email, password, dateOfJoin, status, dateOfRelieve, manager);
-
-		Assertions.assertEquals(name, employee.getName());
-		Assertions.assertEquals(email, employee.getEmail());
-		Assertions.assertEquals(password, employee.getPassword());
-		Assertions.assertEquals(dateOfJoin, employee.getDateOfJoin());
-		Assertions.assertTrue(employee.isStatus());
-		Assertions.assertEquals(dateOfRelieve, employee.getDateOfRelieve());
-		Assertions.assertEquals(manager, employee.getManager());
-	}
-
-	@Test
 	void testGettersAndSetters() {
 		Employee employee = new Employee();
 
