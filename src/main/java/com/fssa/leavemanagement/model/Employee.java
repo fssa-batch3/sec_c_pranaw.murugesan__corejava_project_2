@@ -3,7 +3,7 @@ package com.fssa.leavemanagement.model;
 import java.time.LocalDate;
 
 public class Employee {
-//	add id 
+	private int id;
 	private String name;
 	private String email;
 	private String password;
@@ -32,6 +32,7 @@ public class Employee {
 	 */
 	public Employee(String name, String email, String password, LocalDate dateOfJoin, boolean status,
 			LocalDate dateOfRelieve, Employee manager) {
+
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -42,6 +43,7 @@ public class Employee {
 	}
 
 	public Employee(String name, String email, String password, LocalDate dateOfJoining, boolean status) {
+
 		this.name = name;
 		this.email = email;
 		this.password = password;

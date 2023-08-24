@@ -7,9 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.fssa.leavemanagement.exceptions.DAOException;
-
-import io.github.cdimascio.dotenv.Dotenv;
-
 public class ConnectionUtil {
 	private ConnectionUtil() {
 //	private constructor
@@ -29,19 +26,17 @@ public class ConnectionUtil {
 		String userName;
 		String passWord;
 
-//		if (System.getenv("CI") != null) {
-//			url = System.getenv("DATABASE_HOST");
-//			userName = System.getenv("DATABASE_USERNAME");
-//			passWord = System.getenv("DATABASE_PASSWORD");
-//		} else {
-//			Dotenv env = Dotenv.load();
-//			url = env.get("DATABASE_HOST");
-//			userName = env.get("DATABASE_USERNAME");
-//			passWord = env.get("DATABASE_PASSWORD");
-//		}
-		 url ="jdbc:mysql://localhost:3306/leavemanagement";
-		 userName = "root";
-		 passWord = "password";
+
+		url = System.getenv("DATABASE_HOST");
+		userName = System.getenv("DATABASE_USERNAME");
+		passWord = System.getenv("DATABASE_PASSWORD");
+		
+		
+	
+		
+//		 url ="jdbc:mysql://localhost:3306/leavemanagement";
+//		 userName = "root";
+//		 passWord = "password";
 		
 
 		try {
