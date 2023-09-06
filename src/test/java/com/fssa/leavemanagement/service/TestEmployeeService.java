@@ -2,6 +2,7 @@ package com.fssa.leavemanagement.service;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -11,6 +12,7 @@ import com.fssa.leavemanagement.errors.EmployeeErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidEmployeeException;
 import com.fssa.leavemanagement.model.Employee;
+import com.fssa.leavemanagement.model.RoleTypes;
 
 /**
  * 
@@ -24,10 +26,28 @@ import com.fssa.leavemanagement.model.Employee;
  *
  */
 class TestEmployeeService {
+
+	static Employee emp = new Employee();
+
 	@Test
 	void testAddEmployee() throws InvalidEmployeeException, DAOException, SQLException {
-		Employee emp = new Employee("pranaw", "pranaw5@gmail.com", "IPranaw@123%", LocalDate.of(2021, 10, 10), true);
-		Assertions.assertTrue(EmployeeService.addEmployee(emp, "CEO"));
+		emp.setEmail("john.doe@fssa.freshworks.com");
+		emp.setManager("suman.gopalan@freshworks.com");
+		emp.setName("John Doe");
+		emp.setPassword("Icodeu100%");
+		emp.setStatus(true);
+		Assertions.assertTrue(EmployeeService.addEmployee(emp, RoleTypes.TEAMLEAD.getName()));
+	}
+
+	@Test
+	void testEmployeeAlreadyExists() {
+		try {
+			Assertions.assertTrue(EmployeeService.addEmployee(emp, RoleTypes.HR.name()));
+		} catch (InvalidEmployeeException | DAOException | SQLException e) {
+			Assertions.assertEquals(EmployeeErrors.EMPLOYEE_ALREADY_EXISTS, e.getMessage());
+
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -43,28 +63,39 @@ class TestEmployeeService {
 
 	@Test
 	void testUpdateEmployee() throws InvalidEmployeeException, DAOException {
-		Employee emp = new Employee("pranaw", "pranaw1@gmail.com", "IPranaw@123%", LocalDate.of(2021, 10, 10), true);
-		Assertions.assertTrue(EmployeeService.updateEmployee(emp, 2));
+
+		emp.setEmail("john.doe@fssa.freshworks.com");
+		emp.setManager("suman.gopalan@freshworks.com");
+		emp.setName("John Doe");
+		emp.setPassword("Icodeu100%");
+		emp.setStatus(true);
+		Assertions.assertTrue(EmployeeService.updateEmployee(emp));
 	}
 
 	@Test
 	void testInvalidUpdateEmployee() {
 		Employee emp = new Employee();
 		try {
-			Assertions.assertTrue(EmployeeService.updateEmployee(emp, 2));
+			Assertions.assertTrue(EmployeeService.updateEmployee(emp));
 		} catch (InvalidEmployeeException | DAOException e) {
 			Assertions.assertEquals(EmployeeErrors.INVALID_NAME, e.getMessage());
 		}
 	}
 
 	@Test
+	void testFindEmployeeByName() throws InvalidEmployeeException, DAOException, SQLException {
+		String find = "John Doe";
+		Employee foundEmployee = EmployeeService.findEmployeeByName(find);
+		Assertions.assertNotNull(foundEmployee);
+		String nonExistentName = "nonexistent";
+		Employee nonExistentEmployee = EmployeeService.findEmployeeByName(nonExistentName);
+		Assertions.assertNull(nonExistentEmployee);
+	}
+
+	@Test
 	void testDeleteEmployee() throws InvalidEmployeeException, DAOException, SQLException {
-		Employee employee = new Employee();
-		employee.setEmail("pranaw5@gmail.com");
-		employee.setName("pranaw");
-		employee.setPassword("IPranaw@123%");
-		employee.setStatus(true);
-		Assertions.assertTrue(EmployeeService.deleteEmployee(employee));
+
+		Assertions.assertTrue(EmployeeService.deleteEmployee(emp.getEmail()));
 	}
 
 	@Test
@@ -92,16 +123,6 @@ class TestEmployeeService {
 		List<Employee> employeeList = EmployeeService.getAllEmployee();
 		Assertions.assertNotNull(employeeList);
 		Assertions.assertFalse(employeeList.isEmpty());
-	}
-
-	@Test
-	void testFindEmployeeByName() throws InvalidEmployeeException, DAOException, SQLException {
-		String find = "pranaw";
-		Employee foundEmployee = EmployeeService.findEmployeeByName(find);
-		Assertions.assertNotNull(foundEmployee);
-		String nonExistentName = "nonexistent";
-		Employee nonExistentEmployee = EmployeeService.findEmployeeByName(nonExistentName);
-		Assertions.assertNull(nonExistentEmployee);
 	}
 
 }

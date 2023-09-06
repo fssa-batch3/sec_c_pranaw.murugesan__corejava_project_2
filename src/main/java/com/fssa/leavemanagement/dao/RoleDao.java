@@ -28,7 +28,6 @@ public class RoleDao {
 //		private constructor
 	}
 
-
 	/**
 	 * Adds a Role object to the database.
 	 * 
@@ -121,13 +120,14 @@ public class RoleDao {
 	 */
 	public static List<Role> getAllRole() throws InvalidRoleException, SQLException, DAOException {
 		List<Role> arr = new ArrayList<>();
-		Role role = new Role();
+
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			String query = "SELECT * FROM role";
 			try (Statement statement = connection.createStatement()) {
 				try (ResultSet resultSet = statement.executeQuery(query)) { // this will run the query and return the
 																			// value
 					while (resultSet.next()) { // printing columns until there is no values
+						Role role = new Role();
 						role.setId(resultSet.getInt(1));
 						role.setName(resultSet.getString(2));
 						arr.add(role);

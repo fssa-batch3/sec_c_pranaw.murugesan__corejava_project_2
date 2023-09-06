@@ -1,7 +1,7 @@
 package com.fssa.leavemanagement.model;
 
 public enum RoleTypes {
-	CEO("CEO"), MANAGER("Manager"), TEAMLEAD("Team Lead"), HR("HR");
+	CEO("CEO"), MANAGER("MANAGER"), TEAMLEAD("TEAMLEAD"), HR("HR");
 
 	private String name;
 

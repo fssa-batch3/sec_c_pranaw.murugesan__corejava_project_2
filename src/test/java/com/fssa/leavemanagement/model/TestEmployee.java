@@ -3,6 +3,7 @@ package com.fssa.leavemanagement.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * The TestEmployee class contains unit tests for the Employee class. It tests
@@ -18,26 +19,25 @@ class TestEmployee {
 		String name = "Jane Doe";
 		String email = "jane.doe@example.com";
 		String password = "Password123";
-		LocalDate dateOfJoin = LocalDate.of(2023, 8, 1);
+		LocalDate dateOfJoin = LocalDate.now();
 		boolean status = true;
-		LocalDate dateOfRelieve = LocalDate.of(2025, 2, 1);
-		Employee manager = new Employee("Manager Name", "manager@example.com", "ManagerPass123",
-				LocalDate.of(2022, 1, 1), true, null, null);
+		LocalDate dateOfRelieve = LocalDate.now();
+		String manager = "manager@example.com";
 
 		employee.setName(name);
 		employee.setEmail(email);
 		employee.setPassword(password);
-		employee.setDateOfJoin(dateOfJoin);
+		employee.setDateOfJoining(dateOfJoin);
 		employee.setStatus(status);
-		employee.setDateOfRelieve(dateOfRelieve);
+		employee.setDateOfRelieving(dateOfRelieve);
 		employee.setManager(manager);
 
 		Assertions.assertEquals(name, employee.getName());
 		Assertions.assertEquals(email, employee.getEmail());
 		Assertions.assertEquals(password, employee.getPassword());
-		Assertions.assertEquals(dateOfJoin, employee.getDateOfJoin());
+		Assertions.assertEquals(dateOfJoin, employee.getDateOfJoining());
 		Assertions.assertTrue(employee.isStatus());
-		Assertions.assertEquals(dateOfRelieve, employee.getDateOfRelieve());
+		Assertions.assertEquals(dateOfRelieve, employee.getDateOfRelieving());
 		Assertions.assertEquals(manager, employee.getManager());
 	}
 }

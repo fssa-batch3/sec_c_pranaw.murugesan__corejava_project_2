@@ -1,6 +1,8 @@
 package com.fssa.leavemanagement.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Employee {
 	private int id;
@@ -10,7 +12,7 @@ public class Employee {
 	private LocalDate dateOfJoining;
 	private boolean status;
 	private LocalDate dateOfRelieving;
-	private Employee manager;
+	private String manager;
 
 	/**
 	 * Default Constructor for creating an empty Employee object.
@@ -31,7 +33,7 @@ public class Employee {
 	 * @param manager       The manager of the employee (another Employee object).
 	 */
 	public Employee(String name, String email, String password, LocalDate dateOfJoin, boolean status,
-			LocalDate dateOfRelieve, Employee manager) {
+			LocalDate dateOfRelieve, String manager) {
 
 		this.name = name;
 		this.email = email;
@@ -110,7 +112,7 @@ public class Employee {
 	 * 
 	 * @return The date of joining of the employee.
 	 */
-	public LocalDate getDateOfJoin() {
+	public LocalDate getDateOfJoining() {
 		return dateOfJoining;
 	}
 
@@ -119,7 +121,7 @@ public class Employee {
 	 * 
 	 * @param dateOfJoin The date of joining of the employee to be set.
 	 */
-	public void setDateOfJoin(LocalDate dateOfJoin) {
+	public void setDateOfJoining(LocalDate dateOfJoin) {
 		this.dateOfJoining = dateOfJoin;
 	}
 
@@ -146,7 +148,7 @@ public class Employee {
 	 * 
 	 * @return The date of relieving of the employee (or null if not applicable).
 	 */
-	public LocalDate getDateOfRelieve() {
+	public LocalDate getDateOfRelieving() {
 		return dateOfRelieving;
 	}
 
@@ -155,7 +157,7 @@ public class Employee {
 	 * 
 	 * @param dateOfRelieve The date of relieving of the employee to be set.
 	 */
-	public void setDateOfRelieve(LocalDate dateOfRelieve) {
+	public void setDateOfRelieving(LocalDate dateOfRelieve) {
 		this.dateOfRelieving = dateOfRelieve;
 	}
 
@@ -164,7 +166,7 @@ public class Employee {
 	 * 
 	 * @return The manager of the employee.
 	 */
-	public Employee getManager() {
+	public String getManager() {
 		return manager;
 	}
 
@@ -173,8 +175,15 @@ public class Employee {
 	 * 
 	 * @param manager The manager of the employee to be set.
 	 */
-	public void setManager(Employee manager) {
+	public void setManager(String manager) {
 		this.manager = manager;
+	}
+
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password
+				+ ", dateOfJoining=" + dateOfJoining + ", status=" + status + ", dateOfRelieving=" + dateOfRelieving
+				+ ", manager=" + manager + "] \n";
 	}
 
 }

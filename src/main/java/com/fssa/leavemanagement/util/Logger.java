@@ -13,7 +13,7 @@ public class Logger {
 	 * 
 	 * @param msg The log message to be printed.
 	 */
-	public void info(String msg) {
+	public static void info(String msg) {
 		System.out.println(msg);
 	}
 }

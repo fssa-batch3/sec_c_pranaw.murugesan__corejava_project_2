@@ -6,14 +6,11 @@ import com.fssa.leavemanagement.dao.EmployeeRoleDetailsDao;
 import com.fssa.leavemanagement.errors.EmployeeErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.model.EmployeeRoleDetails;
-import com.fssa.leavemanagement.util.Logger;
 
 public class EmployeeRoleDetailsService {
 	private EmployeeRoleDetailsService() {
 //		private constructor
 	}
-
-	static Logger logger = new Logger();
 
 	/**
 	 * Add employee role details to the database.

@@ -1,6 +1,7 @@
 package com.fssa.leavemanagement.validator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import com.fssa.leavemanagement.model.Employee;
  */
 class TestEmployeeValidator {
 
-	static LocalDate join = LocalDate.of(2023, 07, 27);
+	static LocalDate join = LocalDate.now();
 	static Employee employee = new Employee("pranaw", "pranaw@gmail.com", "IFresh100%", join, true, null, null);
 
 	@Test

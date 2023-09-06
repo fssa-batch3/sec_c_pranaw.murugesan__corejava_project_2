@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.fssa.leavemanagement.exceptions.DAOException;
+
 public class ConnectionUtil {
 	private ConnectionUtil() {
 //	private constructor
@@ -26,30 +27,26 @@ public class ConnectionUtil {
 		String userName;
 		String passWord;
 
-
 		url = System.getenv("DATABASE_HOST");
 		userName = System.getenv("DATABASE_USERNAME");
 		passWord = System.getenv("DATABASE_PASSWORD");
-		
-		
-	
-		
-//		 url ="jdbc:mysql://localhost:3306/leavemanagement";
-//		 userName = "root";
-//		 passWord = "password";
-		
+
+//		url = "jdbc:mysql://localhost:3306/leavemanagement";
+//		userName = "root";
+//		passWord = "password";
 
 		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection(url, userName, passWord);
 
 		} catch (Exception e) {
-			throw new DAOException("Unable to connect to the database");
+			throw new DAOException(e.getMessage());
 		}
 		return con;
 	}
 
 	public static void close(Connection conn, Statement stmt, ResultSet rs) {
-		Logger logger = new Logger();
+
 		try {
 			if (rs != null) {
 				rs.close();
@@ -61,8 +58,18 @@ public class ConnectionUtil {
 				conn.close();
 			}
 		} catch (SQLException e) {
-			logger.info(e.getMessage());
+			Logger.info(e.getMessage());
 		}
+	}
+
+	public static void main(String[] args) {
+		try {
+			getConnection();
+		} catch (DAOException e) {
+			Logger.info(e.getMessage());
+			e.printStackTrace();
+		}
+
 	}
 
 }

@@ -10,6 +10,7 @@ import com.fssa.leavemanagement.errors.RoleErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidRoleException;
 import com.fssa.leavemanagement.model.Role;
+import com.fssa.leavemanagement.model.RoleTypes;
 
 /**
  * The TestRoleService class contains unit tests for the RoleService class. It

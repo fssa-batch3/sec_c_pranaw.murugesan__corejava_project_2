@@ -50,7 +50,7 @@ public class RoleValidator {
 	 * @throws InvalidRoleException if the name is invalid.
 	 */
 	public static boolean validateName(String name) throws InvalidRoleException {
-		if (name == null || name.trim().length() <= 2) {
+		if (name == null || name.trim().length() < 2) {
 			throw new InvalidRoleException(RoleErrors.INVALID_NAME);
 		}
 		String regex = "^[A-Za-z ]{2,}$";

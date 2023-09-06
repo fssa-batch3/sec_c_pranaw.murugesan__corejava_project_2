@@ -31,5 +31,6 @@ public class EmployeeErrors {
 	public static final String CANNOT_ADD_EMPLOYEE = "Cannot add Employee";
 	public static final String INVALID_ID = "Id cannot 0 or negative or more than 2147483647";
 	public static final String INVALID_EMPLOYEE_ROLE_DETAIL = "Invalid Employee Role Detail passed in DAO Layer";
+	public static final String EMPLOYEE_ALREADY_EXISTS = "Cannot Add, Employee Already Exists";
 
 }

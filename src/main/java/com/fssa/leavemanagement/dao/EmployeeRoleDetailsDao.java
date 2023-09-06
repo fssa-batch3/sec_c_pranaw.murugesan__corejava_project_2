@@ -22,7 +22,6 @@ import com.fssa.leavemanagement.util.Logger;
  *
  */
 public class EmployeeRoleDetailsDao {
-	static Logger logger = new Logger();
 
 	private EmployeeRoleDetailsDao() {
 //		private constructor
@@ -34,7 +33,7 @@ public class EmployeeRoleDetailsDao {
 	 * @param erd The EmployeeRoleDetails object to be added to the database.
 	 * @return true if the addition is successful, false otherwise.
 	 * @throws SQLException If a database access error occurs.
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	public static boolean addEmployeeRoleDetails(EmployeeRoleDetails erd) throws SQLException, DAOException {
 		String query = "INSERT INTO employee_role_details (employee_id,role_id,"
@@ -58,7 +57,7 @@ public class EmployeeRoleDetailsDao {
 	 * @param erd The EmployeeRoleDetails object with updated values.
 	 * @return true if the update is successful, false otherwise.
 	 * @throws SQLException If a database access error occurs.
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	public static boolean updateEmployeeRoleDetails(EmployeeRoleDetails erd) throws SQLException, DAOException {
 		String query = "UPDATE employee_role_details SET employee_id = ? ,"
@@ -82,7 +81,7 @@ public class EmployeeRoleDetailsDao {
 	 * 
 	 * @return true if the retrieval is successful, false otherwise.
 	 * @throws SQLException If a database access error occurs.
-	 * @throws DAOException 
+	 * @throws DAOException
 	 */
 	public static boolean getAllEmployeeRoleDetails() throws SQLException, DAOException {
 		String query = "SELECT * FROM employee_role_details";
@@ -91,10 +90,10 @@ public class EmployeeRoleDetailsDao {
 				try (ResultSet rs = st.executeQuery(query)) {
 					while (rs.next()) {
 
-						logger.info("id : " + rs.getInt("id"));
-						logger.info("employee_id : " + rs.getInt("employee_id"));
-						logger.info("role_id : " + rs.getInt("role_id"));
-						logger.info("reporting_manager_id : " + rs.getInt("reporting_manager_id"));
+						Logger.info("id : " + rs.getInt("id"));
+						Logger.info("employee_id : " + rs.getInt("employee_id"));
+						Logger.info("role_id : " + rs.getInt("role_id"));
+						Logger.info("reporting_manager_id : " + rs.getInt("reporting_manager_id"));
 					}
 					return true;
 				}

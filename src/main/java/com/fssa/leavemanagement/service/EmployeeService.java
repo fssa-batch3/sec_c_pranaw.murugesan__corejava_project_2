@@ -1,10 +1,12 @@
 package com.fssa.leavemanagement.service;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fssa.leavemanagement.dao.EmployeeDao;
+import com.fssa.leavemanagement.errors.EmployeeErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidEmployeeException;
 import com.fssa.leavemanagement.model.Employee;
@@ -30,18 +32,22 @@ public class EmployeeService {
 	 */
 	public static boolean addEmployee(Employee employee, String role)
 			throws InvalidEmployeeException, DAOException, SQLException {
-		int employeeId = EmployeeDao.getEmployeeIdByName(employee.getName());
-		if (EmployeeValidator.validateEmployee(employee)) {
+
+		if (EmployeeValidator.validateEmployee(employee) && (!EmployeeDao.checkEmployeeExists(employee.getEmail()))) {
+
 			EmployeeDao.addEmployee(employee, role);
 
+		} else {
+			throw new InvalidEmployeeException(EmployeeErrors.EMPLOYEE_ALREADY_EXISTS);
 		}
 		if (role.equals(RoleTypes.CEO.getName())) {
 			EmployeeDao.addCeoRoleDetails(employee, role);
-		} else {
-
-			EmployeeDao.addRoleDetails(employee, role);
-			EmployeeDao.insertLeaveBalances(employeeId);
 		}
+		int employeeId = EmployeeDao.getEmployeeIdByEmail(employee.getEmail());
+
+		EmployeeDao.insertLeaveBalances(employeeId);
+		EmployeeDao.addRoleDetails(employee, role);
+
 		return true;
 	}
 
@@ -73,11 +79,16 @@ public class EmployeeService {
 	 * @throws DAOException             if an SQL exception occurs while updating
 	 *                                  the employee.
 	 */
-	public static boolean updateEmployee(Employee employee, int id) throws InvalidEmployeeException, DAOException {
+	public static boolean updateEmployee(Employee employee) throws InvalidEmployeeException, DAOException {
 		if (EmployeeValidator.validateEmployee(employee)) {
-			EmployeeDao.updateEmployee(employee, id);
+			EmployeeDao.updateEmployee(employee);
 		}
 		return true;
+	}
+
+	public static boolean deleteEmployee(String email) throws SQLException, DAOException {
+		return EmployeeDao.deleteEmployee(email);
+
 	}
 
 	/**
@@ -93,11 +104,17 @@ public class EmployeeService {
 	 */
 	public static boolean deleteEmployee(Employee employee)
 			throws InvalidEmployeeException, DAOException, SQLException {
-		int employeeId = EmployeeDao.getEmployeeIdByName(employee.getName());
 		if (EmployeeValidator.validateEmployee(employee)) {
-			EmployeeDao.deleteLeaveBalances(employeeId);
-			EmployeeDao.deleteEmployeeRoleDetails(employeeId);
-			EmployeeDao.deleteEmployeeRecord(employeeId);
+
+			/**
+			 * The below methods calls are commented out because of changed database table
+			 * constraint (ON DELETE CASCADE). So that it can delete foreign tables if we
+			 * delete the element in parent table
+			 * 
+			 * EmployeeDao.deleteLeaveBalances(employeeId);
+			 * EmployeeDao.deleteEmployeeRoleDetails(employeeId);
+			 */
+			EmployeeDao.deleteEmployee(employee.getEmail());
 		}
 		return true;
 	}
@@ -114,9 +131,27 @@ public class EmployeeService {
 	 * @throws SQLException             if a general SQL exception occurs.
 	 */
 	public static Employee findEmployeeByName(String name) throws InvalidEmployeeException, DAOException, SQLException {
-		Employee employee = new Employee();
+		Employee employee = null;
 		if (EmployeeValidator.validateName(name)) {
 			employee = EmployeeDao.findEmployeeByName(name);
+		}
+		return employee;
+	}
+
+	public static boolean checkEmployeeExists(String email)
+			throws SQLException, DAOException, InvalidEmployeeException {
+		if (EmployeeValidator.validateEmail(email)) {
+
+			return EmployeeDao.checkEmployeeExists(email);
+		}
+		return false;
+	}
+
+	public static Employee findEmployeeByEmail(String email)
+			throws InvalidEmployeeException, DAOException, SQLException {
+		Employee employee = null;
+		if (EmployeeValidator.validateEmail(email)) {
+			employee = EmployeeDao.findEmployeeByEmail(email);
 		}
 		return employee;
 	}

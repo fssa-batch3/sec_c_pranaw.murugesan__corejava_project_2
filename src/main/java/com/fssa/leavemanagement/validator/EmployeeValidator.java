@@ -45,7 +45,7 @@ public class EmployeeValidator {
 		if (name == null || name.trim().length() < 2) {
 			throw new InvalidEmployeeException(EmployeeErrors.INVALID_NAME);
 		}
-		String regex = "^[A-Za-z]{2,30}$";
+		String regex = "^[A-Za-z ]{2,30}$";
 		boolean matches = Pattern.compile(regex).matcher(name).matches();
 		if (matches) {
 			return true;
@@ -85,6 +85,7 @@ public class EmployeeValidator {
 		}
 	}
 
+
 	/**
 	 * Validate the password of an employee.
 	 * 
@@ -93,7 +94,8 @@ public class EmployeeValidator {
 	 * @throws InvalidEmployeeException if the password is invalid.
 	 */
 	public static boolean validatePassword(String password) throws InvalidEmployeeException {
-		String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$";
+
+		String regex = "^(?=.*\\d)(?=.*[a-z])(?=.*[a-zA-Z]).{8,}$";
 		boolean matches = Pattern.compile(regex).matcher(password).matches();
 		if (matches) {
 			return true;

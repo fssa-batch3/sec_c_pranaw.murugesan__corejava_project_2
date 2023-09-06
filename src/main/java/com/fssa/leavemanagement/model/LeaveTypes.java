@@ -12,4 +12,5 @@ public enum LeaveTypes {
 	public String getName() {
 		return getName;
 	}
+
 }
