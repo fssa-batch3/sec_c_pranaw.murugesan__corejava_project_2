@@ -41,21 +41,16 @@ public class EmployeeValidator {
 		return true;
 	}
 
-	
 	public static boolean validateManager(String email) throws DAOException, SQLException, InvalidEmployeeException {
-		List<Employee> arr = EmployeeDao.getAllEmployee();
-		boolean flag = false;
-		for (Employee e : arr) {
+		List<Employee> employees = EmployeeDao.getAllEmployee();
+
+		for (Employee e : employees) {
 			if (e.getEmail().equals(email)) {
 				return true;
-			} else {
-				flag = false;
 			}
 		}
-		if (flag == false) {
-			throw new InvalidEmployeeException(EmployeeErrors.INVALID_MANAGER);
-		}
-		return flag;
+
+		throw new InvalidEmployeeException(EmployeeErrors.INVALID_MANAGER);
 	}
 
 	/**

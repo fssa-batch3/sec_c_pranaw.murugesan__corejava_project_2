@@ -28,13 +28,12 @@ public class EmployeeLeaveDetailsService {
 		return Collections.emptyList();
 	}
 
-	public static EmployeeLeaveBalance getLeaveBalanceByEmployeeId(int id) {
+	public static EmployeeLeaveBalance getLeaveBalanceByEmployeeId(int id) throws DAOException {
 		try {
 			return EmployeeLeaveDetailsDao.getLeaveBalanceByEmployeeId(id);
 		} catch (SQLException | DAOException e) {
-			e.printStackTrace();
+			throw new DAOException(e.getMessage());
 		}
-		return null;
 	}
 
 	public static EmployeeLeaveBalance getLeaveBalanceByEmail(String email)
@@ -46,7 +45,7 @@ public class EmployeeLeaveDetailsService {
 		return null;
 	}
 
-	public static List<EmployeeLeaveBalance> getAllLeaveBalance() {
+	public static List<EmployeeLeaveBalance> getAllLeaveBalance() throws DAOException {
 		return EmployeeLeaveDetailsDao.getAllLeaveBalances();
 	}
 
@@ -59,20 +58,19 @@ public class EmployeeLeaveDetailsService {
 	}
 
 	public static List<EmployeeLeaveDetails> getLeaveRequestsByManagerEmail(String email)
-			throws InvalidEmployeeException {
+			throws InvalidEmployeeException, DAOException {
 		if (EmployeeValidator.validateEmail(email)) {
 			try {
 				return EmployeeLeaveDetailsDao.getLeaveRequestsByManagerEmail(email);
 			} catch (SQLException | DAOException e) {
-				e.printStackTrace();
+				throw new DAOException(e.getMessage());
 			}
 		}
-		return null;
+		return Collections.emptyList();
 	}
 
 	public static boolean updateLeaveRequest(String status, int id, String comments, EmployeeLeaveBalance e,
-			int employeeId, LeaveTypes leaveType, int daysToReduce)
-			throws SQLException, DAOException, ValidatorException {
+			int employeeId, LeaveTypes leaveType, int daysToReduce) throws SQLException, DAOException {
 
 		if (leaveType.getName().equals("CL")) {
 			leaveType = LeaveTypes.CASUAL;

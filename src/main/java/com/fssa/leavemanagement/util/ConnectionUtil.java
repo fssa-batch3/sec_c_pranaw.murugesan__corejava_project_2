@@ -27,13 +27,15 @@ public class ConnectionUtil {
 		String userName;
 		String passWord;
 
+//		Cloud DB
 //		url = System.getenv("DATABASE_HOST");
 //		userName = System.getenv("DATABASE_USERNAME");
 //		passWord = System.getenv("DATABASE_PASSWORD");
 
-		url = "jdbc:mysql://localhost:3306/leavemanagement";
-		userName = "root";
-		passWord = "password";
+//		Local DB
+		url = System.getenv("LOCAL_HOST");
+		userName = System.getenv("LOCAL_USERNAME");
+		passWord = System.getenv("LOCAL_PASSWORD");
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -60,16 +62,6 @@ public class ConnectionUtil {
 		} catch (SQLException e) {
 			Logger.info(e.getMessage());
 		}
-	}
-
-	public static void main(String[] args) {
-		try {
-			getConnection();
-		} catch (DAOException e) {
-			Logger.info(e.getMessage());
-			e.printStackTrace();
-		}
-
 	}
 
 }

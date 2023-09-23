@@ -23,7 +23,6 @@ import com.fssa.leavemanagement.util.Logger;
  *
  */
 public class EmployeeRoleDetailsDao {
-	private static int roleId;
 	private EmployeeRoleDetailsDao() {
 //		private constructor
 	}
@@ -61,6 +60,7 @@ public class EmployeeRoleDetailsDao {
 	 * @throws DAOException
 	 */
 	public static boolean updateEmployeeRoleDetails(Employee employee) throws SQLException, DAOException {
+		int roleId = 0;
 		String query = "UPDATE employee_role_details "
 				+ "SET role_id = ?, reporting_manager_id = ? WHERE employee_id = ?";
 		try (Connection connection = ConnectionUtil.getConnection()) {

@@ -16,6 +16,10 @@ import com.fssa.leavemanagement.model.LeaveTypes;
 import com.fssa.leavemanagement.util.ConnectionUtil;
 
 public class EmployeeLeaveDetailsDao {
+	private static String leaveTypeConstant = "leave_type";
+	private static String noOfDaysConstant = "no_of_days";
+	private static String employeeIdConstant = "employee_id";
+
 	private EmployeeLeaveDetailsDao() {
 //	private constructor
 	}
@@ -59,9 +63,9 @@ public class EmployeeLeaveDetailsDao {
 						EmployeeLeaveDetails elb = new EmployeeLeaveDetails();
 						LocalDate endDate = LocalDate.parse(rs.getString("end_date"));
 						LocalDate startDate = LocalDate.parse(rs.getString("start_date"));
-						if ("CL".equals(rs.getString("leave_type"))) {
+						if ("CL".equals(rs.getString(leaveTypeConstant))) {
 							elb.setLeaveType(LeaveTypes.CASUAL);
-						} else if ("SL".equals(rs.getString("leave_type"))) {
+						} else if ("SL".equals(rs.getString(leaveTypeConstant))) {
 							elb.setLeaveType(LeaveTypes.CASUAL);
 						} else {
 							elb.setLeaveType(LeaveTypes.EARNED);
@@ -69,11 +73,11 @@ public class EmployeeLeaveDetailsDao {
 						elb.setEndDate(endDate);
 						elb.setLeaveReason(rs.getString("leave_reason"));
 						elb.setStartDate(startDate);
-						elb.setNoOfDays(rs.getInt("no_of_days"));
+						elb.setNoOfDays(rs.getInt(noOfDaysConstant));
 						elb.setStatus(rs.getString("status"));
 						elb.setId(rs.getInt("id"));
-						elb.setEmployeeId(rs.getInt("employee_id"));
-						elb.setName(EmployeeDao.findEmployeeNameById(rs.getInt("employee_id")));
+						elb.setEmployeeId(rs.getInt(employeeIdConstant));
+						elb.setName(EmployeeDao.findEmployeeNameById(rs.getInt(employeeIdConstant)));
 						arr.add(elb);
 					}
 				}
@@ -91,13 +95,13 @@ public class EmployeeLeaveDetailsDao {
 				pst.setInt(1, id);
 				try (ResultSet rs = pst.executeQuery()) {
 					while (rs.next()) {
-						String leaveType = rs.getString("leave_type");
+						String leaveType = rs.getString(leaveTypeConstant);
 						if ("CL".equals(leaveType)) {
-							elb.setCasualLeaveBalance(rs.getDouble("no_of_days"));
+							elb.setCasualLeaveBalance(rs.getDouble(noOfDaysConstant));
 						} else if ("SL".equals(leaveType)) {
-							elb.setSickLeaveBalance(rs.getDouble("no_of_days"));
+							elb.setSickLeaveBalance(rs.getDouble(noOfDaysConstant));
 						} else {
-							elb.setEarnedLeaveBalance(rs.getDouble("no_of_days"));
+							elb.setEarnedLeaveBalance(rs.getDouble(noOfDaysConstant));
 						}
 					}
 				}
@@ -114,13 +118,13 @@ public class EmployeeLeaveDetailsDao {
 				pst.setInt(1, EmployeeDao.getEmployeeIdByEmail(email));
 				try (ResultSet rs = pst.executeQuery()) {
 					while (rs.next()) {
-						String leaveType = rs.getString("leave_type");
+						String leaveType = rs.getString(leaveTypeConstant);
 						if ("CL".equals(leaveType)) {
-							elb.setCasualLeaveBalance(rs.getDouble("no_of_days"));
+							elb.setCasualLeaveBalance(rs.getDouble(noOfDaysConstant));
 						} else if ("SL".equals(leaveType)) {
-							elb.setSickLeaveBalance(rs.getDouble("no_of_days"));
+							elb.setSickLeaveBalance(rs.getDouble(noOfDaysConstant));
 						} else {
-							elb.setEarnedLeaveBalance(rs.getDouble("no_of_days"));
+							elb.setEarnedLeaveBalance(rs.getDouble(noOfDaysConstant));
 						}
 					}
 				}
@@ -141,9 +145,9 @@ public class EmployeeLeaveDetailsDao {
 					while (rs.next()) {
 						EmployeeLeaveDetails eld = new EmployeeLeaveDetails();
 						eld.setId(rs.getInt("id"));
-						eld.setEmployeeId(rs.getInt("employee_id"));
-						eld.setName(EmployeeDao.findEmployeeNameById(rs.getInt("employee_id")));
-						leaveType = (rs.getString("leave_type"));
+						eld.setEmployeeId(rs.getInt(employeeIdConstant));
+						eld.setName(EmployeeDao.findEmployeeNameById(rs.getInt(employeeIdConstant)));
+						leaveType = (rs.getString(leaveTypeConstant));
 						if ("CL".equals(leaveType)) {
 							eld.setLeaveType(LeaveTypes.CASUAL);
 						} else if ("SL".equals(leaveType)) {
@@ -157,7 +161,7 @@ public class EmployeeLeaveDetailsDao {
 						eld.setEndDate(LocalDate.parse(lDate));
 						eld.setStatus(rs.getString("status"));
 						eld.setLeaveReason(rs.getString("leave_reason"));
-						eld.setNoOfDays(rs.getInt("no_of_days"));
+						eld.setNoOfDays(rs.getInt(noOfDaysConstant));
 						eldArray.add(eld);
 					}
 				}
@@ -166,7 +170,7 @@ public class EmployeeLeaveDetailsDao {
 		return eldArray;
 	}
 
-	public static List<EmployeeLeaveBalance> getAllLeaveBalances() {
+	public static List<EmployeeLeaveBalance> getAllLeaveBalances() throws DAOException {
 		List<EmployeeLeaveBalance> elb = new ArrayList<>();
 		String query = "SELECT "
 				+ "e.name AS employee_name, e.email AS employee_email, COALESCE(slb_sick.no_of_days, 0) AS sick_leave_balance,COALESCE(slb_casual.no_of_days, 0) AS casual_leave_balance,COALESCE(slb_earned.no_of_days, 0) AS earned_leave_balance "
@@ -188,7 +192,7 @@ public class EmployeeLeaveDetailsDao {
 			}
 		} catch (SQLException | DAOException e) {
 
-			e.printStackTrace();
+			throw new DAOException(e.getMessage());
 		}
 		return elb;
 
@@ -207,7 +211,6 @@ public class EmployeeLeaveDetailsDao {
 				pst.setDate(4, java.sql.Date.valueOf(leaveDetails.getEndDate()));
 				pst.setDouble(5, leaveDetails.getNoOfDays());
 				pst.setString(6, leaveDetails.getLeaveReason());
-//				pst.setString(7, leaveDetails.getStatus());
 				pst.setInt(7, leaveDetails.getManagerId());
 				pst.setString(8, leaveDetails.getComments());
 

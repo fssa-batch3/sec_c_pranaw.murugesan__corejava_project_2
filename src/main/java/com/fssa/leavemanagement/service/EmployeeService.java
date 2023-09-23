@@ -68,9 +68,7 @@ public class EmployeeService {
 	 * @throws SQLException             if a general SQL exception occurs.
 	 */
 	public static List<Employee> getAllEmployee() throws DAOException, SQLException {
-		List<Employee> employeeList = new ArrayList<>();
-		employeeList = EmployeeDao.getAllEmployee();
-		return employeeList;
+		return EmployeeDao.getAllEmployee();
 	}
 
 	/**

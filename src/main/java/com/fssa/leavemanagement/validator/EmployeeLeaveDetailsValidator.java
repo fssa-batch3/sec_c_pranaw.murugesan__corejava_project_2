@@ -79,7 +79,7 @@ public class EmployeeLeaveDetailsValidator {
 				}
 			}
 		} catch (SQLException | DAOException e) {
-			e.printStackTrace();
+			throw new ValidatorException(e.getMessage());
 		}
 		return true;
 	}

@@ -1,0 +1,8 @@
+com\fssa\leavemanagement\model\TestLeaveTypes.class
+com\fssa\leavemanagement\service\TestRoleService.class
+com\fssa\leavemanagement\model\TestEmployee.class
+com\fssa\leavemanagement\validator\TestRoleValidator.class
+com\fssa\leavemanagement\service\TestEmployeeService.class
+com\fssa\leavemanagement\model\TestRole.class
+com\fssa\leavemanagement\validator\TestEmployeeValidator.class
+com\fssa\leavemanagement\model\EmployeeRoleDetailsTest.class

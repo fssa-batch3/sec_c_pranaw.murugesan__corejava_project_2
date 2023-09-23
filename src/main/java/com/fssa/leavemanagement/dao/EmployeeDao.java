@@ -21,6 +21,9 @@ import com.fssa.leavemanagement.util.ConnectionUtil;
 public class EmployeeDao {
 	private static int roleId;
 	private static int employeeId;
+	private static String emailConstant = "email";
+	private static String passwordConstant = "password";
+	private static String isActiveConstant = "is_active";
 
 	private EmployeeDao() {
 		// Private constructor to prevent instantiation from outside the class
@@ -56,11 +59,7 @@ public class EmployeeDao {
 			try (PreparedStatement pst = connection.prepareStatement(query)) {
 				pst.setString(1, email);
 				try (ResultSet rs = pst.executeQuery()) {
-					if (rs.next()) {
-						return true;
-					} else {
-						return false;
-					}
+					return rs.next();
 				}
 			}
 		}
@@ -227,8 +226,6 @@ public class EmployeeDao {
 				pst1.setInt(2, roleId);
 				pst1.executeUpdate();
 			}
-		} catch (SQLException | DAOException e) {
-			e.printStackTrace();
 		}
 		return true;
 	}
@@ -326,20 +323,9 @@ public class EmployeeDao {
 				pst.setString(1, employee.getName());
 				pst.setString(2, hashPassword(employee.getPassword()));
 				pst.setString(3, employee.getEmail());
-//				pst.executeUpdate();
 				int rows = pst.executeUpdate();
 				return (rows > 0);
 			}
-
-//			String updateEmployeeRoleDetails = "UPDATE employee_role_details "
-//					+ "SET role_id = ?, reporting_manager_id = ? WHERE employee_id = ?";
-//			try (PreparedStatement pst1 = connection.prepareStatement(updateEmployeeRoleDetails)) {
-//				pst1.setInt(1, roleId);
-//				pst1.setInt(2, getEmployeeIdByEmail(employee.getManager()));
-//				pst1.setInt(3, getEmployeeIdByEmail(employee.getEmail()));
-//				pst1.executeUpdate();
-//			}
-
 		} catch (SQLException e) {
 			throw new DAOException(e.getMessage());
 		}
@@ -402,29 +388,17 @@ public class EmployeeDao {
 					 */
 					while (resultSet.next()) {
 //						adding employee to array list
-//						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy,MM,dd");
-//						String date = resultSet.getString("date_of_joining");
-//						LocalDate joinDate = LocalDate.parse(date, formatter);
-//						employee.setDateOfJoin(joinDate);
-//						date = resultSet.getString("date_of_relieving");
-//						LocalDate relieveDate = LocalDate.parse(date, formatter);
-//						employee.setDateOfRelieve(relieveDate);
 						Employee employee = new Employee();
-						employee.setEmail(resultSet.getString("email"));
+						employee.setEmail(resultSet.getString(emailConstant));
 						employee.setName(resultSet.getString("name"));
-						employee.setPassword(resultSet.getString("password"));
-						employee.setStatus(resultSet.getBoolean("is_active"));
-						employee.setManager(getManagerEmailByEmployeeEmail(resultSet.getString("email")));
+						employee.setPassword(resultSet.getString(passwordConstant));
+						employee.setStatus(resultSet.getBoolean(isActiveConstant));
+						employee.setManager(getManagerEmailByEmployeeEmail(resultSet.getString(emailConstant)));
 						employee.setDateOfJoining(LocalDate.parse(resultSet.getString("date_of_joining")));
 						String relievingDateString = resultSet.getString("date_of_relieving");
 						LocalDate relieveDate = (relievingDateString != null) ? LocalDate.parse(relievingDateString)
 								: null;
 						employee.setDateOfRelieving(relieveDate);
-//						LocalDate dateJoining = date;
-//						if (dateJoining != null) {
-//							LocalDateTime localDateTime = dateJoining.toLocalDateTime();
-//							employee.setDateOfJoining(localDateTime);
-//						}
 						employeeList.add(employee);
 
 					}
@@ -463,10 +437,10 @@ public class EmployeeDao {
 						LocalDate relieveDate = (relieveDateString != null) ? LocalDate.parse(relieveDateString) : null;
 						employee.setDateOfRelieving(relieveDate);
 
-						employee.setEmail(resultSet.getString("email"));
+						employee.setEmail(resultSet.getString(emailConstant));
 						employee.setName(resultSet.getString("name"));
-						employee.setPassword(resultSet.getString("password"));
-						employee.setStatus(resultSet.getBoolean("is_active"));
+						employee.setPassword(resultSet.getString(passwordConstant));
+						employee.setStatus(resultSet.getBoolean(isActiveConstant));
 					} else {
 						employee = null;
 					}
@@ -506,11 +480,11 @@ public class EmployeeDao {
 				pst.setString(1, email);
 				try (ResultSet resultSet = pst.executeQuery()) {
 					if (resultSet.next()) {
-						employee.setEmail(resultSet.getString("email"));
+						employee.setEmail(resultSet.getString(emailConstant));
 						employee.setName(resultSet.getString("name"));
-						employee.setPassword(resultSet.getString("password"));
-						employee.setStatus(resultSet.getBoolean("is_active"));
-						employee.setManager(getManagerEmailByEmployeeEmail(resultSet.getString("email")));
+						employee.setPassword(resultSet.getString(passwordConstant));
+						employee.setStatus(resultSet.getBoolean(isActiveConstant));
+						employee.setManager(getManagerEmailByEmployeeEmail(resultSet.getString(emailConstant)));
 					} else {
 						employee = null;
 					}
