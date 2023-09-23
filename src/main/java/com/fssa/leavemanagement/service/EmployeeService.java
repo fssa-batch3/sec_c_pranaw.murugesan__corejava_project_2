@@ -1,11 +1,11 @@
 package com.fssa.leavemanagement.service;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fssa.leavemanagement.dao.EmployeeDao;
+import com.fssa.leavemanagement.dao.EmployeeRoleDetailsDao;
 import com.fssa.leavemanagement.errors.EmployeeErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidEmployeeException;
@@ -14,7 +14,6 @@ import com.fssa.leavemanagement.model.RoleTypes;
 import com.fssa.leavemanagement.validator.EmployeeValidator;
 
 public class EmployeeService {
-
 	private EmployeeService() {
 //		private constructor
 	}
@@ -32,21 +31,27 @@ public class EmployeeService {
 	 */
 	public static boolean addEmployee(Employee employee, String role)
 			throws InvalidEmployeeException, DAOException, SQLException {
+		if (!"CEO".equals(role) && EmployeeDao.getCeo() != 0) {
+			if (EmployeeValidator.validateEmployee(employee)
+					&& (!EmployeeDao.checkEmployeeExists(employee.getEmail()))) {
 
-		if (EmployeeValidator.validateEmployee(employee) && (!EmployeeDao.checkEmployeeExists(employee.getEmail()))) {
+				EmployeeDao.addEmployee(employee);
 
-			EmployeeDao.addEmployee(employee, role);
+			} else {
+				throw new InvalidEmployeeException(EmployeeErrors.EMPLOYEE_ALREADY_EXISTS);
+			}
 
+			if (role.equals(RoleTypes.CEO.getName())) {
+				EmployeeDao.addCeoRoleDetails(employee, role);
+			}
+
+			int employeeId = EmployeeDao.getEmployeeIdByEmail(employee.getEmail());
+
+			EmployeeDao.insertLeaveBalances(employeeId);
+			EmployeeDao.addRoleDetails(employee, role);
 		} else {
-			throw new InvalidEmployeeException(EmployeeErrors.EMPLOYEE_ALREADY_EXISTS);
+			throw new InvalidEmployeeException(EmployeeErrors.CEO_EXISTS);
 		}
-		if (role.equals(RoleTypes.CEO.getName())) {
-			EmployeeDao.addCeoRoleDetails(employee, role);
-		}
-		int employeeId = EmployeeDao.getEmployeeIdByEmail(employee.getEmail());
-
-		EmployeeDao.insertLeaveBalances(employeeId);
-		EmployeeDao.addRoleDetails(employee, role);
 
 		return true;
 	}
@@ -78,16 +83,21 @@ public class EmployeeService {
 	 * @throws InvalidEmployeeException if the employee data is invalid.
 	 * @throws DAOException             if an SQL exception occurs while updating
 	 *                                  the employee.
+	 * @throws SQLException
 	 */
-	public static boolean updateEmployee(Employee employee) throws InvalidEmployeeException, DAOException {
+	public static boolean updateEmployee(Employee employee)
+			throws InvalidEmployeeException, DAOException, SQLException {
 		if (EmployeeValidator.validateEmployee(employee)) {
 			EmployeeDao.updateEmployee(employee);
 		}
+		EmployeeRoleDetailsDao.updateEmployeeRoleDetails(employee);
 		return true;
 	}
 
 	public static boolean deleteEmployee(String email) throws SQLException, DAOException {
-		return EmployeeDao.deleteEmployee(email);
+		EmployeeDao.deleteEmployee(email);
+		EmployeeDao.updateRelievingDate(email);
+		return true;
 
 	}
 

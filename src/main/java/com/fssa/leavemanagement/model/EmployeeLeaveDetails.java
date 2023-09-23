@@ -4,15 +4,41 @@ import java.time.LocalDate;
 
 public class EmployeeLeaveDetails {
 
+	@Override
+	public String toString() {
+		return "EmployeeLeaveDetails [id=" + id + ", name=" + name + ", employeeId=" + employeeId + ", leaveType="
+				+ leaveType + ", startDate=" + startDate + ", endDate=" + endDate + ", noOfDays=" + noOfDays
+				+ ", leaveReason=" + leaveReason + ", status=" + status + ", managerId=" + managerId + ", comments="
+				+ comments + "]\n";
+	}
+
+	private int id;
+	private String name;
 	private int employeeId;
 	private LeaveTypes leaveType;
 	private LocalDate startDate;
 	private LocalDate endDate;
-	private int noOfDays;
+	private double noOfDays;
 	private String leaveReason;
 	private String status;
 	private int managerId;
 	private String comments;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public LeaveTypes getLeaveType() {
 		return leaveType;
@@ -46,11 +72,11 @@ public class EmployeeLeaveDetails {
 		this.endDate = endDate;
 	}
 
-	public int getNoOfDays() {
+	public double getNoOfDays() {
 		return noOfDays;
 	}
 
-	public void setNoOfDays(int noOfDays) {
+	public void setNoOfDays(double noOfDays) {
 		this.noOfDays = noOfDays;
 	}
 

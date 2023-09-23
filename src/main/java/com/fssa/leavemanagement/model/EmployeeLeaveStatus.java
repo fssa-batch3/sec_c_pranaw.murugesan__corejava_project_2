@@ -1,7 +1,7 @@
 package com.fssa.leavemanagement.model;
 
 public enum EmployeeLeaveStatus {
-	PENDING("Pending"), APPROVED("Approved"), CANCELLED("Cancelled"), REJECTED("Rejected");
+	 APPROVED("APPROVED"), CANCELLED("CANCELLED"), REJECTED("REJECTED");
 
 	private final String status;
 

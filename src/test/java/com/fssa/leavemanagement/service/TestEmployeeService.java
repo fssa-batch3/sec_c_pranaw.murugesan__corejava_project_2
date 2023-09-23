@@ -62,7 +62,7 @@ class TestEmployeeService {
 	}
 
 	@Test
-	void testUpdateEmployee() throws InvalidEmployeeException, DAOException {
+	void testUpdateEmployee() throws InvalidEmployeeException, DAOException, SQLException {
 
 		emp.setEmail("john.doe@fssa.freshworks.com");
 		emp.setManager("suman.gopalan@freshworks.com");
@@ -73,7 +73,7 @@ class TestEmployeeService {
 	}
 
 	@Test
-	void testInvalidUpdateEmployee() {
+	void testInvalidUpdateEmployee() throws SQLException {
 		Employee emp = new Employee();
 		try {
 			Assertions.assertTrue(EmployeeService.updateEmployee(emp));

@@ -21,11 +21,9 @@ class TestRole {
 
 	@Test
 	void testParameterizedConstructor() {
-		int id = 1;
 		String name = "Manager";
-		Role role = new Role(id, name);
+		Role role = new Role(name);
 
-		Assertions.assertEquals(id, role.getId());
 		Assertions.assertEquals(name, role.getName());
 	}
 

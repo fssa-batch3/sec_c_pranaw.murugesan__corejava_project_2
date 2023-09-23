@@ -19,7 +19,7 @@ import com.fssa.leavemanagement.model.Role;
 class TestRoleValidator {
 	@Test
 	void testValidate() {
-		Role role = new Role(1, "Manager");
+		Role role = new Role("Manager");
 		try {
 			Assertions.assertTrue(RoleValidator.validate(role));
 		} catch (InvalidRoleException e) {
@@ -36,27 +36,6 @@ class TestRoleValidator {
 
 		} catch (InvalidRoleException e) {
 			Assertions.assertEquals(RoleErrors.INVALID_ROLE, e.getMessage());
-		}
-	}
-
-	@Test
-	void testValidId() {
-		try {
-			Assertions.assertTrue(RoleValidator.validateId(2));
-		} catch (InvalidRoleException e) {
-			// Should not throw an exception for a valid id
-			Assertions.assertEquals(RoleErrors.INVALID_ID, e.getMessage());
-		}
-	}
-
-	@Test
-	void testInvalidId() {
-		try {
-			Assertions.assertTrue(RoleValidator.validateId(0));
-			// Should throw an exception for an invalid id
-			Assertions.fail("Expected InvalidRoleException for an invalid id");
-		} catch (InvalidRoleException e) {
-			Assertions.assertEquals(RoleErrors.INVALID_ID, e.getMessage());
 		}
 	}
 

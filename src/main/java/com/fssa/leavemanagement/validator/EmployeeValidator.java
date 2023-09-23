@@ -1,8 +1,12 @@
 package com.fssa.leavemanagement.validator;
 
+import java.sql.SQLException;
+import java.util.List;
 import java.util.regex.Pattern;
 
+import com.fssa.leavemanagement.dao.EmployeeDao;
 import com.fssa.leavemanagement.errors.EmployeeErrors;
+import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidEmployeeException;
 import com.fssa.leavemanagement.model.Employee;
 
@@ -17,6 +21,8 @@ public class EmployeeValidator {
 	 * @param employee The Employee object to be validated.
 	 * @return true if the employee data is valid, false otherwise.
 	 * @throws InvalidEmployeeException if the employee data is invalid.
+	 * @throws SQLException
+	 * @throws DAOException
 	 */
 	public static boolean validateEmployee(Employee employee) throws InvalidEmployeeException {
 		if (employee == null) {
@@ -27,11 +33,29 @@ public class EmployeeValidator {
 			validateName(employee.getName());
 			validateEmail(employee.getEmail());
 			validatePassword(employee.getPassword());
-		} catch (InvalidEmployeeException e) {
+			validateManager(employee.getManager());
+		} catch (InvalidEmployeeException | DAOException | SQLException e) {
 			throw new InvalidEmployeeException(e.getMessage());
 		}
 
 		return true;
+	}
+
+	
+	public static boolean validateManager(String email) throws DAOException, SQLException, InvalidEmployeeException {
+		List<Employee> arr = EmployeeDao.getAllEmployee();
+		boolean flag = false;
+		for (Employee e : arr) {
+			if (e.getEmail().equals(email)) {
+				return true;
+			} else {
+				flag = false;
+			}
+		}
+		if (flag == false) {
+			throw new InvalidEmployeeException(EmployeeErrors.INVALID_MANAGER);
+		}
+		return flag;
 	}
 
 	/**
@@ -84,7 +108,6 @@ public class EmployeeValidator {
 			throw new InvalidEmployeeException(EmployeeErrors.INVALID_EMAIL);
 		}
 	}
-
 
 	/**
 	 * Validate the password of an employee.

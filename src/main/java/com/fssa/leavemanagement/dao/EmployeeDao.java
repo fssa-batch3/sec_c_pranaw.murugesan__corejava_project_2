@@ -35,6 +35,21 @@ public class EmployeeDao {
 	 * @throws DAOException
 	 */
 
+	public static int getCeo() throws SQLException, DAOException {
+		int ceoCount = 0;
+		String query = "SELECT e.email AS ceo_name FROM employee AS e JOIN employee_role_details AS erd ON e.id = erd.employee_id JOIN role AS r ON erd.role_id = r.id WHERE r.name = 'CEO'";
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			try (Statement statement = connection.createStatement()) {
+				try (ResultSet rs = statement.executeQuery(query)) {
+					while (rs.next()) {
+						ceoCount++;
+					}
+				}
+			}
+		}
+		return ceoCount;
+	}
+
 	public static boolean checkEmployeeExists(String email) throws SQLException, DAOException {
 		String query = "SELECT email FROM employee WHERE email = ?";
 		try (Connection connection = ConnectionUtil.getConnection()) {
@@ -75,6 +90,7 @@ public class EmployeeDao {
 	 * @throws InvalidEmployeeException if an error occurs during hashing (e.g.,
 	 *                                  NoSuchAlgorithmException).
 	 */
+
 	public static String hashPassword(String password) throws InvalidEmployeeException {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -203,6 +219,7 @@ public class EmployeeDao {
 	public static boolean addCeoRoleDetails(Employee employee, String role) throws SQLException, DAOException {
 		roleId = RoleDao.getRoleIdByName(role);
 		employeeId = EmployeeDao.getEmployeeIdByEmail(employee.getEmail());
+
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			String queryEmployeeDetail = "INSERT INTO employee_role_details" + " (employee_id,role_id) VALUES (?,?);";
 			try (PreparedStatement pst1 = connection.prepareStatement(queryEmployeeDetail)) {
@@ -216,7 +233,7 @@ public class EmployeeDao {
 		return true;
 	}
 
-	public static boolean addEmployee(Employee employee, String role) throws InvalidEmployeeException, DAOException {
+	public static boolean addEmployee(Employee employee) throws InvalidEmployeeException, DAOException {
 		int employeeRoleDetailsRows = 0;
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
@@ -247,6 +264,18 @@ public class EmployeeDao {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
+	public static boolean updateRelievingDate(String email) throws SQLException, DAOException {
+		String query = "UPDATE employee SET date_of_relieving = ? WHERE email = ?";
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			try (PreparedStatement pst = connection.prepareStatement(query)) {
+				LocalDate date = LocalDate.now();
+				pst.setDate(1, java.sql.Date.valueOf(date));
+				pst.setString(2, email);
+				return (pst.executeUpdate() > 0);
+			}
+		}
+	}
+
 	public static boolean deleteEmployee(String email) throws SQLException, DAOException {
 		String query = "UPDATE employee SET is_active = ? WHERE email = ?";
 		try (Connection connection = ConnectionUtil.getConnection()) {
@@ -297,20 +326,19 @@ public class EmployeeDao {
 				pst.setString(1, employee.getName());
 				pst.setString(2, hashPassword(employee.getPassword()));
 				pst.setString(3, employee.getEmail());
-				pst.executeUpdate();
-			}
-
-			roleId = RoleDao.getRoleIdByName(getRoleByEmployeeName(employee.getName()));
-			String updateEmployeeRoleDetails = "UPDATE employee_role_details "
-					+ "SET role_id = ?, reporting_manager_id = ? WHERE employee_id = ?";
-			try (PreparedStatement pst1 = connection.prepareStatement(updateEmployeeRoleDetails)) {
-				pst1.setInt(1, roleId);
-				pst1.setInt(2, getEmployeeIdByEmail(employee.getManager()));
-				pst1.setInt(3, getEmployeeIdByEmail(employee.getEmail()));
-				pst1.executeUpdate();
-				int rows = pst1.executeUpdate();
+//				pst.executeUpdate();
+				int rows = pst.executeUpdate();
 				return (rows > 0);
 			}
+
+//			String updateEmployeeRoleDetails = "UPDATE employee_role_details "
+//					+ "SET role_id = ?, reporting_manager_id = ? WHERE employee_id = ?";
+//			try (PreparedStatement pst1 = connection.prepareStatement(updateEmployeeRoleDetails)) {
+//				pst1.setInt(1, roleId);
+//				pst1.setInt(2, getEmployeeIdByEmail(employee.getManager()));
+//				pst1.setInt(3, getEmployeeIdByEmail(employee.getEmail()));
+//				pst1.executeUpdate();
+//			}
 
 		} catch (SQLException e) {
 			throw new DAOException(e.getMessage());
@@ -448,6 +476,25 @@ public class EmployeeDao {
 			}
 		}
 		return employee;
+	}
+
+	public static String findEmployeeNameById(int id) throws DAOException {
+		String name = null;
+		String query = "SELECT name FROM employee WHERE id = ?";
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			try (PreparedStatement pst = connection.prepareStatement(query)) {
+				pst.setInt(1, id);
+				try (ResultSet rs = pst.executeQuery()) {
+					if (rs.next()) {
+						name = rs.getString("name");
+					}
+				}
+			}
+		} catch (SQLException | DAOException e) {
+			throw new DAOException(e.getMessage());
+		}
+		return name;
+
 	}
 
 	public static Employee findEmployeeByEmail(String email) throws DAOException, SQLException {

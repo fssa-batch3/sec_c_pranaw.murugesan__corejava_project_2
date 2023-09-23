@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.fssa.leavemanagement.exceptions.DAOException;
+import com.fssa.leavemanagement.model.Employee;
 import com.fssa.leavemanagement.model.EmployeeRoleDetails;
 import com.fssa.leavemanagement.util.ConnectionUtil;
 import com.fssa.leavemanagement.util.Logger;
@@ -22,7 +23,7 @@ import com.fssa.leavemanagement.util.Logger;
  *
  */
 public class EmployeeRoleDetailsDao {
-
+	private static int roleId;
 	private EmployeeRoleDetailsDao() {
 //		private constructor
 	}
@@ -59,18 +60,19 @@ public class EmployeeRoleDetailsDao {
 	 * @throws SQLException If a database access error occurs.
 	 * @throws DAOException
 	 */
-	public static boolean updateEmployeeRoleDetails(EmployeeRoleDetails erd) throws SQLException, DAOException {
-		String query = "UPDATE employee_role_details SET employee_id = ? ,"
-				+ " role_id = ? , reporting_manager_id = ? WHERE employee_id = ?";
+	public static boolean updateEmployeeRoleDetails(Employee employee) throws SQLException, DAOException {
+		String query = "UPDATE employee_role_details "
+				+ "SET role_id = ?, reporting_manager_id = ? WHERE employee_id = ?";
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			try (PreparedStatement pst = connection.prepareStatement(query)) {
-				pst.setInt(1, erd.getEmployeeId());
-				pst.setInt(2, erd.getRoleId());
-				pst.setInt(3, erd.getReportingManagerId());
-				pst.setInt(4, erd.getEmployeeId());
-
+				roleId = RoleDao.getRoleIdByName(EmployeeDao.getRoleByEmployeeName(employee.getName()));
+				pst.setInt(1, roleId);
+				pst.setInt(2, EmployeeDao.getEmployeeIdByEmail(employee.getManager()));
+				pst.setInt(3, EmployeeDao.getEmployeeIdByEmail(employee.getEmail()));
+				pst.executeUpdate();
 				int rows = pst.executeUpdate();
 				return (rows > 0);
+
 			}
 		}
 	}

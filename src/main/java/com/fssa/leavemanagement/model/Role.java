@@ -17,8 +17,7 @@ public class Role {
 	 * @param id   The ID of the role.
 	 * @param name The name of the role.
 	 */
-	public Role(int id, String name) {
-		this.id = id;
+	public Role(String name) {
 		this.name = name;
 	}
 

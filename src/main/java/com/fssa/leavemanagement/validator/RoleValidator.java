@@ -23,7 +23,6 @@ public class RoleValidator {
 		if (role == null) {
 			throw new InvalidRoleException(RoleErrors.INVALID_ROLE);
 		}
-		validateId(role.getId());
 		validateName(role.getName());
 		return true;
 	}
@@ -35,12 +34,6 @@ public class RoleValidator {
 	 * @return true if the ID is valid, false otherwise.
 	 * @throws InvalidRoleException if the ID is invalid.
 	 */
-	public static boolean validateId(int id) throws InvalidRoleException {
-		if (id <= 0) {
-			throw new InvalidRoleException(RoleErrors.INVALID_ID);
-		}
-		return true;
-	}
 
 	/**
 	 * Validate the name of a role.

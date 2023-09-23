@@ -1,44 +1,92 @@
 package com.fssa.leavemanagement.validator;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 
+import com.fssa.leavemanagement.dao.EmployeeLeaveDetailsDao;
 import com.fssa.leavemanagement.errors.EmployeeLeaveDetailsErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
+import com.fssa.leavemanagement.exceptions.ValidatorException;
+import com.fssa.leavemanagement.model.EmployeeLeaveBalance;
 import com.fssa.leavemanagement.model.EmployeeLeaveDetails;
+import com.fssa.leavemanagement.model.EmployeeLeaveStatus;
+import com.fssa.leavemanagement.model.LeaveTypes;
 
 public class EmployeeLeaveDetailsValidator {
 	private EmployeeLeaveDetailsValidator() {
 //		private constructor
 	}
 
-	public static boolean validate(EmployeeLeaveDetails leaveDetails) throws DAOException {
+	public static boolean validate(EmployeeLeaveDetails leaveDetails, String email) throws ValidatorException {
 		if (leaveDetails == null) {
-			throw new DAOException(EmployeeLeaveDetailsErrors.INVALID_DETAILS);
+			throw new ValidatorException(EmployeeLeaveDetailsErrors.INVALID_DETAILS);
 		}
-		validateDate(leaveDetails.getStartDate());
-		validateDate(leaveDetails.getEndDate());
-		validateNoOfDays(leaveDetails.getNoOfDays());
+		isValidLeaveType(leaveDetails.getLeaveType().getName());
+		isValidLeaveStatus(leaveDetails.getStatus());
+		validateStartDate(leaveDetails.getStartDate());
+		validateEndDate(leaveDetails.getEndDate(), leaveDetails.getStartDate());
+		validateNoOfDays(leaveDetails, email);
 		validateLeaveReason(leaveDetails.getLeaveReason());
 		return true;
 	}
 
-	public static boolean validateDate(LocalDate date) throws DAOException {
+	public static boolean isValidLeaveType(String inputType) {
+		for (LeaveTypes leaveType : LeaveTypes.values()) {
+			if (leaveType.getName().equalsIgnoreCase(inputType)) {
+				return true; // Match found
+			}
+		}
+		return false; // No match found
+	}
+
+	public static boolean isValidLeaveStatus(String inputStatus) {
+		for (EmployeeLeaveStatus leaveStatus : EmployeeLeaveStatus.values()) {
+			if (leaveStatus.getStatus().equalsIgnoreCase(inputStatus)) {
+				return true; // Match found
+			}
+		}
+		return false; // No match found
+	}
+
+	public static boolean validateEndDate(LocalDate endDate, LocalDate startDate) throws ValidatorException {
+		if (endDate.isBefore(startDate)) {
+			throw new ValidatorException(EmployeeLeaveDetailsErrors.INVALID_END_DATE);
+		}
+		return true;
+	}
+
+	public static boolean validateStartDate(LocalDate date) throws ValidatorException {
 		if (date.isBefore(LocalDate.now())) {
-			throw new DAOException(EmployeeLeaveDetailsErrors.INVALID_DATE);
+			throw new ValidatorException(EmployeeLeaveDetailsErrors.INVALID_START_DATE);
 		}
 		return true;
 	}
 
-	public static boolean validateNoOfDays(int noOfDays) throws DAOException {
-		if (noOfDays >= 0) {
-			throw new DAOException(EmployeeLeaveDetailsErrors.INVALID_DAYS);
+	public static boolean validateNoOfDays(EmployeeLeaveDetails leaveDetails, String email) throws ValidatorException {
+		try {
+			EmployeeLeaveBalance elb = EmployeeLeaveDetailsDao.getLeaveBalanceByEmail(email);
+			if (LeaveTypes.CASUAL.equals(leaveDetails.getLeaveType())) {
+				if (elb.getCasualLeaveBalance() < leaveDetails.getNoOfDays()) {
+					throw new ValidatorException(EmployeeLeaveDetailsErrors.EXCEEDS_LEAVE_BALANCE);
+				}
+			} else if (LeaveTypes.SICK.equals(leaveDetails.getLeaveType())) {
+				if (elb.getSickLeaveBalance() < leaveDetails.getNoOfDays()) {
+					throw new ValidatorException(EmployeeLeaveDetailsErrors.EXCEEDS_LEAVE_BALANCE);
+				}
+			} else {
+				if (elb.getEarnedLeaveBalance() < leaveDetails.getNoOfDays()) {
+					throw new ValidatorException(EmployeeLeaveDetailsErrors.EXCEEDS_LEAVE_BALANCE);
+				}
+			}
+		} catch (SQLException | DAOException e) {
+			e.printStackTrace();
 		}
 		return true;
 	}
 
-	public static boolean validateLeaveReason(String reason) throws DAOException {
+	public static boolean validateLeaveReason(String reason) throws ValidatorException {
 		if (reason == null || "".equals(reason) || reason.length() < 3) {
-			throw new DAOException(EmployeeLeaveDetailsErrors.INVALID_REASON);
+			throw new ValidatorException(EmployeeLeaveDetailsErrors.INVALID_REASON);
 		}
 		return true;
 	}

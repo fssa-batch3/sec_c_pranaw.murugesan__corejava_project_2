@@ -32,5 +32,7 @@ public class EmployeeErrors {
 	public static final String INVALID_ID = "Id cannot 0 or negative or more than 2147483647";
 	public static final String INVALID_EMPLOYEE_ROLE_DETAIL = "Invalid Employee Role Detail passed in DAO Layer";
 	public static final String EMPLOYEE_ALREADY_EXISTS = "Cannot Add, Employee Already Exists";
+	public static final String INVALID_MANAGER = "Manager cannot be empty or outside freshworks";
+	public static final String CEO_EXISTS = "You Cannot set CEO if CEO is already exist";
 
 }

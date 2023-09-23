@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import com.fssa.leavemanagement.dao.EmployeeRoleDetailsDao;
 import com.fssa.leavemanagement.errors.EmployeeErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
+import com.fssa.leavemanagement.model.Employee;
 import com.fssa.leavemanagement.model.EmployeeRoleDetails;
 
 public class EmployeeRoleDetailsService {
@@ -38,9 +39,9 @@ public class EmployeeRoleDetailsService {
 	 *         otherwise.
 	 * @throws DAOException if an SQL exception occurs while updating the details.
 	 */
-	public static boolean updateEmployeeRoleDetails(EmployeeRoleDetails erd) throws DAOException {
+	public static boolean updateEmployeeRoleDetails(Employee employee) throws DAOException {
 		try {
-			return EmployeeRoleDetailsDao.updateEmployeeRoleDetails(erd);
+			return EmployeeRoleDetailsDao.updateEmployeeRoleDetails(employee);
 		} catch (SQLException e) {
 			throw new DAOException(EmployeeErrors.INVALID_EMPLOYEE_ROLE_DETAIL);
 		}

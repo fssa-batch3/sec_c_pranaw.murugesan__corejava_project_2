@@ -24,7 +24,7 @@ import com.fssa.leavemanagement.model.RoleTypes;
 class TestRoleService {
 	@Test
 	void testAddRole() throws InvalidRoleException, SQLException, DAOException {
-		Role role = new Role(1, "Junior Designer");
+		Role role = new Role("Junior Designer");
 		Assertions.assertTrue(RoleService.addRole(role));
 	}
 
@@ -42,13 +42,13 @@ class TestRoleService {
 
 	@Test
 	void testDeleteRole() throws InvalidRoleException, SQLException, DAOException {
-		Role role = new Role(1, "Junior Designer");
+		Role role = new Role("Junior Designer");
 		Assertions.assertTrue(RoleService.deleteRole(role));
 	}
 
 	@Test
 	void testInvalidDeleteRole() throws DAOException {
-		Role role = new Role(1, "abc");
+		Role role = new Role("abc");
 		try {
 			Assertions.assertTrue(RoleService.deleteRole(role));
 		} catch (InvalidRoleException | SQLException e) {
@@ -66,7 +66,7 @@ class TestRoleService {
 
 	@Test
 	void testFindRoleByName() throws InvalidRoleException, SQLException, DAOException {
-		Role role = new Role(1, "CEO");
+		Role role = new Role("CEO");
 		Role foundRole = RoleService.findRoleByName(role.getName());
 
 		Assertions.assertNotNull(foundRole);
