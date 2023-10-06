@@ -3,7 +3,6 @@ package com.fssa.leavemanagement.model;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * The TestEmployee class contains unit tests for the Employee class. It tests

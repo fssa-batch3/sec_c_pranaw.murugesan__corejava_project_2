@@ -1,7 +1,6 @@
 package com.fssa.leavemanagement.validator;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,8 @@ import com.fssa.leavemanagement.model.Employee;
 class TestEmployeeValidator {
 
 	static LocalDate join = LocalDate.now();
-	static Employee employee = new Employee("pranaw", "pranaw@gmail.com", "IFresh100%", join, true, null, null);
+	static Employee employee = new Employee("pranaw", "pranaw@gmail.com", "IFresh100%", join, true, null,
+			"girish@freshworks.com");
 
 	@Test
 	void testValidateEmployee() {
@@ -84,7 +84,7 @@ class TestEmployeeValidator {
 		try {
 			Assertions.assertTrue(EmployeeValidator.validatePassword("123"));
 		} catch (InvalidEmployeeException e) {
-			Assertions.assertEquals(EmployeeErrors.INVALID_PASSWORD, e.getMessage());
+			Assertions.assertEquals(EmployeeErrors.INVALID_CREDENTIALS, e.getMessage());
 		}
 	}
 

@@ -25,7 +25,7 @@ public class EmployeeLeaveDetailsDao {
 	}
 
 	public static boolean reduceLeaveBalance(EmployeeLeaveBalance e, int employeeId, LeaveTypes leaveType,
-			int daysToReduce) throws SQLException, DAOException {
+			double daysToReduce) throws SQLException, DAOException {
 		String query = "UPDATE employee_leave_balance SET no_of_days= ? WHERE employee_id = ? AND leave_type=?";
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
@@ -42,11 +42,10 @@ public class EmployeeLeaveDetailsDao {
 				pst.setInt(2, employeeId);
 				pst.setString(3, leaveType.getName());
 				return (pst.executeUpdate() > 0);
-			} catch (SQLException e1) {
-				e1.printStackTrace();
+			} catch (SQLException ex) {
+				throw new DAOException(ex.getMessage());
 			}
 		}
-		return true;
 	}
 
 	public static List<EmployeeLeaveDetails> getLeaveRequestsByManagerEmail(String email)

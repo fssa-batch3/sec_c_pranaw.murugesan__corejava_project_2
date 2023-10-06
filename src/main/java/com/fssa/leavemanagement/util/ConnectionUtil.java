@@ -28,14 +28,14 @@ public class ConnectionUtil {
 		String passWord;
 
 //		Cloud DB
-//		url = System.getenv("DATABASE_HOST");
-//		userName = System.getenv("DATABASE_USERNAME");
-//		passWord = System.getenv("DATABASE_PASSWORD");
+		url = System.getenv("DATABASE_HOST");
+		userName = System.getenv("DATABASE_USERNAME");
+		passWord = System.getenv("DATABASE_PASSWORD");
 
 //		Local DB
-		url = System.getenv("LOCAL_HOST");
-		userName = System.getenv("LOCAL_USERNAME");
-		passWord = System.getenv("LOCAL_PASSWORD");
+//		url = System.getenv("LOCAL_HOST");
+//		userName = System.getenv("LOCAL_USERNAME");
+//		passWord = System.getenv("LOCAL_PASSWORD");
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

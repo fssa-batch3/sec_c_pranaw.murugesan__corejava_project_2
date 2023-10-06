@@ -1,7 +1,12 @@
 package com.fssa.leavemanagement.validator;
 
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.fssa.leavemanagement.dao.EmployeeLeaveDetailsDao;
 import com.fssa.leavemanagement.errors.EmployeeLeaveDetailsErrors;
@@ -27,7 +32,17 @@ public class EmployeeLeaveDetailsValidator {
 		validateEndDate(leaveDetails.getEndDate(), leaveDetails.getStartDate());
 		validateNoOfDays(leaveDetails, email);
 		validateLeaveReason(leaveDetails.getLeaveReason());
+		if (isWeekend(leaveDetails.getStartDate()) || isWeekend(leaveDetails.getEndDate())) {
+			throw new ValidatorException(EmployeeLeaveDetailsErrors.WEEKEND_LEAVE);
+		}
 		return true;
+	}
+	
+
+	private static boolean isWeekend(LocalDate localDate) {
+
+		// get Day of week for the passed LocalDate
+		return (localDate.get(ChronoField.DAY_OF_WEEK) == 6) || (localDate.get(ChronoField.DAY_OF_WEEK) == 7);
 	}
 
 	public static boolean isValidLeaveType(String inputType) {

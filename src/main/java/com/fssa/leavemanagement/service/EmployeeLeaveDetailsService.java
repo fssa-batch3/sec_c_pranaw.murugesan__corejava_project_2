@@ -70,7 +70,7 @@ public class EmployeeLeaveDetailsService {
 	}
 
 	public static boolean updateLeaveRequest(String status, int id, String comments, EmployeeLeaveBalance e,
-			int employeeId, LeaveTypes leaveType, int daysToReduce) throws SQLException, DAOException {
+			int employeeId, LeaveTypes leaveType, double daysToReduce) throws SQLException, DAOException {
 
 		if (leaveType.getName().equals("CL")) {
 			leaveType = LeaveTypes.CASUAL;

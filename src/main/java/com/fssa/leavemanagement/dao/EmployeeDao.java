@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fssa.leavemanagement.errors.EmployeeErrors;
+import com.fssa.leavemanagement.errors.EmployeeLeaveDetailsErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidEmployeeException;
 import com.fssa.leavemanagement.model.Employee;
@@ -261,27 +262,22 @@ public class EmployeeDao {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
-	public static boolean updateRelievingDate(String email) throws SQLException, DAOException {
-		String query = "UPDATE employee SET date_of_relieving = ? WHERE email = ?";
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			try (PreparedStatement pst = connection.prepareStatement(query)) {
-				LocalDate date = LocalDate.now();
-				pst.setDate(1, java.sql.Date.valueOf(date));
-				pst.setString(2, email);
-				return (pst.executeUpdate() > 0);
-			}
-		}
-	}
+
 
 	public static boolean deleteEmployee(String email) throws SQLException, DAOException {
-		String query = "UPDATE employee SET is_active = ? WHERE email = ?";
+		String updateQuery = "UPDATE employee SET is_active = ?, date_of_relieving = ? WHERE email = ?";
+
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			try (PreparedStatement pst = connection.prepareStatement(query)) {
-				pst.setBoolean(1, false);
-				pst.setString(2, email);
-				int rows = pst.executeUpdate();
-				return (rows > 0);
+			try (PreparedStatement pstUpdate = connection.prepareStatement(updateQuery)) {
+
+				pstUpdate.setBoolean(1, false);
+				pstUpdate.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+				pstUpdate.setString(3, email);
+
+				return (pstUpdate.executeUpdate() > 0);
 			}
+		} catch (SQLException e) {
+			throw new DAOException(EmployeeLeaveDetailsErrors.CANNOT_RELIEVE);
 		}
 	}
 
@@ -422,12 +418,11 @@ public class EmployeeDao {
 	 */
 
 	public static Employee findEmployeeByName(String name) throws DAOException, SQLException {
-
 		Employee employee = new Employee();
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			String query = "SELECT * FROM employee WHERE name = ?";
+			String query = "SELECT * FROM employee WHERE name LIKE ?";
 			try (PreparedStatement pst = connection.prepareStatement(query)) {
-				pst.setString(1, name);
+				pst.setString(1, "%" + name + "%");
 				try (ResultSet resultSet = pst.executeQuery()) {
 					if (resultSet.next()) {
 						LocalDate joinDate = LocalDate.parse(resultSet.getString("date_of_joining"));

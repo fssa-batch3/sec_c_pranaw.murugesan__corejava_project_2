@@ -2,15 +2,12 @@ package com.fssa.leavemanagement.service;
 
 import java.sql.SQLException;
 import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import com.fssa.leavemanagement.errors.RoleErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidRoleException;
 import com.fssa.leavemanagement.model.Role;
-import com.fssa.leavemanagement.model.RoleTypes;
 
 /**
  * The TestRoleService class contains unit tests for the RoleService class. It
@@ -35,7 +32,7 @@ class TestRoleService {
 		try {
 			Assertions.assertTrue(RoleService.addRole(role));
 		} catch (InvalidRoleException | SQLException e) {
-			Assertions.assertEquals(RoleErrors.INVALID_ID, e.getMessage());
+			Assertions.assertEquals(RoleErrors.INVALID_NAME, e.getMessage());
 		}
 
 	}

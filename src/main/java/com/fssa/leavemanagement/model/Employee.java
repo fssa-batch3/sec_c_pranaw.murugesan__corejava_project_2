@@ -12,6 +12,16 @@ public class Employee {
 	private LocalDate dateOfRelieving;
 	private String manager;
 
+	public static void main(String[] args) {
+		LocalDate today = LocalDate.now();    
+	    LocalDate yesterday = today.minusDays(1);    
+	    LocalDate tomorrow = today.plusDays(1); 
+		System.out.println(today.getDayOfMonth());
+		System.out.println(yesterday);
+		System.out.println(tomorrow);
+
+	}
+
 	/**
 	 * Default Constructor for creating an empty Employee object.
 	 */

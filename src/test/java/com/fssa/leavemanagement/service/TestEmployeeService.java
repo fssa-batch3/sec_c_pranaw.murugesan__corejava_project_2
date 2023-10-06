@@ -1,13 +1,9 @@
 package com.fssa.leavemanagement.service;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import com.fssa.leavemanagement.errors.EmployeeErrors;
 import com.fssa.leavemanagement.exceptions.DAOException;
 import com.fssa.leavemanagement.exceptions.InvalidEmployeeException;
@@ -84,7 +80,7 @@ class TestEmployeeService {
 
 	@Test
 	void testFindEmployeeByName() throws InvalidEmployeeException, DAOException, SQLException {
-		String find = "John Doe";
+		String find = "Girish Mathrubootham";
 		Employee foundEmployee = EmployeeService.findEmployeeByName(find);
 		Assertions.assertNotNull(foundEmployee);
 		String nonExistentName = "nonexistent";
@@ -94,7 +90,11 @@ class TestEmployeeService {
 
 	@Test
 	void testDeleteEmployee() throws InvalidEmployeeException, DAOException, SQLException {
-
+		emp.setEmail("john.doe@fssa.freshworks.com");
+		emp.setManager("suman.gopalan@freshworks.com");
+		emp.setName("John Doe");
+		emp.setPassword("Icodeu100%");
+		emp.setStatus(true);
 		Assertions.assertTrue(EmployeeService.deleteEmployee(emp.getEmail()));
 	}
 
@@ -105,6 +105,7 @@ class TestEmployeeService {
 		employee.setName("pranaw");
 		employee.setPassword("IPranaw@123%");
 		employee.setStatus(true);
+		employee.setManager("girish@freshworks.com");
 		Assertions.assertTrue(EmployeeService.deleteEmployee(employee));
 	}
 
@@ -125,4 +126,26 @@ class TestEmployeeService {
 		Assertions.assertFalse(employeeList.isEmpty());
 	}
 
+	@Test
+	void testFindEmployeeByEmail() throws InvalidEmployeeException, DAOException, SQLException {
+		String find = "girish@freshworks.com";
+		Employee foundEmployee = EmployeeService.findEmployeeByEmail(find);
+		Assertions.assertNotNull(foundEmployee);
+		String nonExistentName = "nonexistent@gmail.com";
+		Employee nonExistentEmployee = EmployeeService.findEmployeeByEmail(nonExistentName);
+		Assertions.assertNull(nonExistentEmployee);
+
+	}
+
+	@Test
+	void testCheckEmployeeExists() throws SQLException, DAOException, InvalidEmployeeException {
+		String check = "girish@freshworks.com";
+		Assertions.assertTrue(EmployeeService.checkEmployeeExists(check));
+	}
+
+	@Test
+	void testInvalidemployeeExists() throws SQLException, DAOException, InvalidEmployeeException {
+		String check = "outside@freshworks.com";
+		Assertions.assertFalse(EmployeeService.checkEmployeeExists(check));
+	}
 }

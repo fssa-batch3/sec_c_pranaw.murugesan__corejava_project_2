@@ -1,6 +1,7 @@
 package com.fssa.leavemanagement.validator;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,7 @@ public class EmployeeValidator {
 	 * @throws SQLException
 	 * @throws DAOException
 	 */
+
 	public static boolean validateEmployee(Employee employee) throws InvalidEmployeeException {
 		if (employee == null) {
 			throw new InvalidEmployeeException(EmployeeErrors.INVALID_EMPLOYEE);
@@ -80,12 +82,6 @@ public class EmployeeValidator {
 	 * @return true if the ID is valid, false otherwise.
 	 * @throws InvalidEmployeeException if the ID is invalid.
 	 */
-	public static boolean validateId(int id) throws InvalidEmployeeException {
-		if (id <= 0) {
-			throw new InvalidEmployeeException(EmployeeErrors.INVALID_ID);
-		}
-		return true;
-	}
 
 	/**
 	 * Validate the email of an employee.
@@ -94,8 +90,10 @@ public class EmployeeValidator {
 	 * @return true if the email is valid, false otherwise.
 	 * @throws InvalidEmployeeException if the email is invalid.
 	 */
+
 	public static boolean validateEmail(String email) throws InvalidEmployeeException {
-		String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+		String regex = "^[A-Za-z0-9+_.-]+@([A-Za-z0-9+_.-]+\\.)?freshworks\\.com$";
+
 		boolean matches = Pattern.compile(regex).matcher(email).matches();
 		if (matches) {
 			return true;
@@ -118,7 +116,7 @@ public class EmployeeValidator {
 		if (matches) {
 			return true;
 		} else {
-			throw new InvalidEmployeeException(EmployeeErrors.INVALID_PASSWORD);
+			throw new InvalidEmployeeException(EmployeeErrors.INVALID_CREDENTIALS);
 		}
 	}
 }

@@ -1,9 +1,7 @@
 package com.fssa.leavemanagement.service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-
 import com.fssa.leavemanagement.dao.EmployeeDao;
 import com.fssa.leavemanagement.dao.EmployeeRoleDetailsDao;
 import com.fssa.leavemanagement.errors.EmployeeErrors;
@@ -94,7 +92,7 @@ public class EmployeeService {
 
 	public static boolean deleteEmployee(String email) throws SQLException, DAOException {
 		EmployeeDao.deleteEmployee(email);
-		EmployeeDao.updateRelievingDate(email);
+//		EmployeeDao.updateRelievingDate(email);
 		return true;
 
 	}
