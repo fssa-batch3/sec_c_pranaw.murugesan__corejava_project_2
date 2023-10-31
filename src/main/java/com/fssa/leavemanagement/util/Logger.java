@@ -4,8 +4,8 @@ public class Logger {
 	/**
 	 * Default constructor for creating a Logger object.
 	 */
-	public Logger() {
-		// Default constructor
+	private Logger() {
+		// Making this constructor private so that it should not make object
 	}
  
 	/**
@@ -16,4 +16,6 @@ public class Logger {
 	public static void info(String msg) {
 		System.out.println(msg);
 	}
+	
+	
 }

@@ -2,6 +2,7 @@ C:\Users\PranawMurugesan\Documents\GitHub\leaveManagementApp\leavemanagement\src
 C:\Users\PranawMurugesan\Documents\GitHub\leaveManagementApp\leavemanagement\src\main\java\com\fssa\leavemanagement\validator\RoleValidator.java
 C:\Users\PranawMurugesan\Documents\GitHub\leaveManagementApp\leavemanagement\src\main\java\com\fssa\leavemanagement\model\RoleTypes.java
 C:\Users\PranawMurugesan\Documents\GitHub\leaveManagementApp\leavemanagement\src\main\java\com\fssa\leavemanagement\service\RoleService.java
+C:\Users\PranawMurugesan\Documents\GitHub\leaveManagementApp\leavemanagement\src\main\java\com\fssa\leavemanagement\exceptions\ValidatorException.java
 C:\Users\PranawMurugesan\Documents\GitHub\leaveManagementApp\leavemanagement\src\main\java\com\fssa\leavemanagement\util\Logger.java
 C:\Users\PranawMurugesan\Documents\GitHub\leaveManagementApp\leavemanagement\src\main\java\com\fssa\leavemanagement\model\EmployeeRoleDetails.java
 C:\Users\PranawMurugesan\Documents\GitHub\leaveManagementApp\leavemanagement\src\main\java\com\fssa\leavemanagement\exceptions\InvalidRoleException.java
